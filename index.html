@@ -762,7 +762,238 @@
     .btn, .pill-btn, .segmented-item, .key-cap, .pill-btn-suggestion {
       touch-action: manipulation;
     }
+
+    /* ==========================================================================
+       АДАПТАЦИЯ ПОД ВСЕ УСТРОЙСТВА (MOBILE / TABLET / PC / PROJECTOR)
+       ========================================================================== */
+    
+    .device-badge {
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(198, 159, 90, 0.5);
+      color: var(--accent-gold-light);
+      font-weight: 700;
+      transition: all var(--transition-fast);
+      user-select: none;
+    }
+    .device-badge:hover {
+      background: rgba(198, 159, 90, 0.25);
+      border-color: var(--accent-gold-light);
+      transform: translateY(-1px);
+    }
+    .device-badge:active {
+      transform: scale(0.95);
+    }
+
+    .device-auto-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--primary-navy);
+      box-shadow: var(--shadow-subtle);
+      user-select: none;
+    }
+
+    /* Адаптивность для планшетов и мобильных (до 960px) */
+    @media (max-width: 960px) {
+      .lobby-grid { grid-template-columns: 1fr; }
+      .game-console { grid-template-columns: 1fr; }
+    }
+
+    /* Адаптивность для смартфонов (до 768px) */
+    @media (max-width: 768px) {
+      header {
+        padding: 0.6rem 0.9rem;
+        padding-top: max(0.6rem, env(safe-area-inset-top));
+      }
+      .brand {
+        gap: 8px;
+      }
+      .brand-insignia {
+        width: 32px;
+        height: 32px;
+        font-size: 1.05rem;
+      }
+      .brand-title h1 {
+        font-size: 0.95rem;
+        line-height: 1.15;
+      }
+      .brand-title p {
+        display: none !important; /* скрываем длинный слоган на смартфонах */
+      }
+      .header-actions {
+        gap: 6px;
+      }
+      .pill-btn {
+        padding: 5px 9px;
+        font-size: 0.76rem;
+      }
+
+      .role-bar-container {
+        padding: 0 0.8rem;
+        margin: 0.7rem auto 0.4rem;
+        gap: 8px;
+      }
+      .segmented-control {
+        width: 100%;
+        display: flex;
+        padding: 3px;
+      }
+      .segmented-item {
+        flex: 1;
+        justify-content: center;
+        padding: 7px 4px;
+        font-size: 0.74rem;
+        text-align: center;
+      }
+      .segmented-item span:first-child {
+        font-size: 0.9rem;
+      }
+      .tab-label-text {
+        font-size: 0.72rem;
+      }
+
+      .device-auto-pill {
+        display: none; /* скрываем на мобильных, чтобы не загромождать */
+      }
+      .room-badge {
+        width: 100%;
+        justify-content: space-between;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+      }
+
+      main {
+        padding: 0.6rem 0.8rem 2rem;
+        padding-bottom: max(2rem, env(safe-area-inset-bottom));
+      }
+
+      .glass-card {
+        padding: 1.1rem 0.85rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 1rem;
+      }
+
+      /* Барабан на мобильном экране */
+      .wheel-wrapper {
+        width: min(290px, 84vw);
+        height: min(290px, 84vw);
+      }
+      #mainWheelCanvas {
+        width: 100% !important;
+        max-width: min(290px, 84vw);
+        height: auto !important;
+        aspect-ratio: 1;
+      }
+
+      /* Буквы на табло на мобильном экране */
+      .stage-board {
+        padding: 1.3rem 0.75rem;
+      }
+      .stage-question {
+        font-size: 1.05rem;
+        line-height: 1.35;
+        margin: 0.8rem auto 1.2rem;
+      }
+      .tiles-deck {
+        gap: 5px;
+      }
+      .tile-slot {
+        width: clamp(30px, 7.5vw, 44px);
+        height: clamp(40px, 9.5vw, 56px);
+      }
+      .tile-front {
+        font-size: 1.1rem;
+      }
+      .tile-back {
+        font-size: clamp(1.2rem, 3.8vw, 1.6rem);
+      }
+
+      /* Виртуальная клавиатура на мобильном экране */
+      .virtual-keyboard {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+      }
+      .key-cap {
+        height: 42px;
+        font-size: 1rem;
+      }
+
+      /* Пульт командира на телефоне */
+      .mobile-shell {
+        max-width: 100%;
+      }
+      .mobile-turn-banner {
+        padding: 1.1rem 0.85rem;
+      }
+      .mobile-action-card {
+        padding: 1.1rem 0.85rem;
+      }
+      .mobile-keypad {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+      }
+      .mobile-keypad .key-cap {
+        height: 48px;
+        font-size: 1.15rem;
+      }
+      #mobileSpinBtn {
+        padding: 15px;
+        font-size: 1.15rem;
+      }
+
+      /* Предотвращение iOS Safari зума при клике в input */
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+    }
+
+    /* Адаптивность для ультракомпактных смартфонов (до 360px, iPhone SE) */
+    @media (max-width: 360px) {
+      .header-actions {
+        gap: 4px;
+      }
+      .pill-btn {
+        padding: 4px 7px;
+        font-size: 0.7rem;
+      }
+      .segmented-item {
+        font-size: 0.68rem;
+        padding: 6px 2px;
+      }
+      .tile-slot {
+        width: 27px;
+        height: 36px;
+      }
+      .tile-back {
+        font-size: 1.05rem;
+      }
+      .mobile-keypad .key-cap {
+        height: 42px;
+        font-size: 1rem;
+      }
+    }
+
+    /* Стиль маркера активного режима для телефона */
+    body.device-phone #tabCaptain {
+      position: relative;
+    }
+    body.device-phone #tabCaptain::after {
+      content: "•";
+      color: var(--success);
+      font-size: 1.2rem;
+      position: absolute;
+      top: -3px;
+      right: 4px;
+    }
   </style>
+
 </head>
 <body>
 
@@ -776,6 +1007,9 @@
       </div>
     </div>
     <div class="header-actions">
+      <div id="deviceModeBadge" class="pill-btn device-badge" title="Нажмите для быстрой смены режима: Телефон / ПК">
+        <span id="deviceModeIcon">📱</span> <span id="deviceModeLabel">Определение...</span>
+      </div>
       <button class="pill-btn" id="soundToggleBtn">
         <span id="soundIcon">🔊</span> <span id="soundLabel">Звук</span>
       </button>
@@ -789,19 +1023,25 @@
   <div class="role-bar-container">
     <div class="segmented-control">
       <button class="segmented-item active" id="tabHostLobby">
-        <span>🎖️</span> Штаб ведущего (Лобби)
+        <span>🎖️</span> <span class="tab-label-text">Штаб (Лобби)</span>
       </button>
       <button class="segmented-item" id="tabProjector">
-        <span>🖥️</span> Экран игры (Проектор)
+        <span>🖥️</span> <span class="tab-label-text">Экран (Проектор)</span>
       </button>
       <button class="segmented-item" id="tabCaptain">
-        <span>📱</span> Пульт взвода (Телефон)
+        <span>📱</span> <span class="tab-label-text">Пульт взвода</span>
       </button>
     </div>
 
-    <div class="room-badge">
-      <span>Код сессии:</span>
-      <span class="code-highlight" id="roomCodeDisplay">ОВП-42</span>
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <span id="deviceAutoDetectNotice" class="device-auto-pill">
+        <span class="status-dot active"></span>
+        <span id="deviceDetectText">Авто-режим: Определение...</span>
+      </span>
+      <div class="room-badge">
+        <span>Код:</span>
+        <span class="code-highlight" id="roomCodeDisplay">ОВП-42</span>
+      </div>
     </div>
   </div>
 
@@ -854,9 +1094,16 @@
               </svg>
             </div>
 
-            <span style="font-size: 0.78rem; opacity: 0.8;">
+            <span style="font-size: 0.78rem; opacity: 0.8; margin-bottom: 8px;">
               Синхронизация через Firebase Realtime Database в реальном времени
             </span>
+
+            <button type="button" class="btn btn-gold" id="copyMobileJoinLinkBtn" style="width: 100%; font-size: 0.85rem; padding: 10px 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <span>📲</span> <span id="copyLinkText">Скопировать ссылку для смартфонов</span>
+            </button>
+            <div id="copyLinkAlert" style="display: none; font-size: 0.76rem; color: var(--accent-gold-light); margin-top: 6px; font-weight: 600; text-align: center;">
+              ✓ Ссылка скопирована! Откройте её на телефоне или отправьте командирам
+            </div>
           </div>
 
           <!-- Список команд / взводов -->
@@ -1520,8 +1767,11 @@
     const screenProjector = document.getElementById('screenProjector');
     const screenCaptain = document.getElementById('screenCaptain');
 
-    function switchTab(target) {
+    function switchTab(target, saveChoice = true) {
       state.activeTab = target;
+      if (saveChoice) {
+        try { sessionStorage.setItem('ovp_user_role', target); } catch(e) {}
+      }
       [tabHostLobby, tabProjector, tabCaptain].forEach(b => b.classList.remove('active'));
       [screenHostLobby, screenProjector, screenCaptain].forEach(s => s.classList.remove('active'));
 
@@ -1540,6 +1790,9 @@
         screenCaptain.classList.add('active');
         renderMobileSelect();
         renderMobileView();
+      }
+      if (typeof DeviceManager !== 'undefined' && DeviceManager.updateBadgeUI) {
+        DeviceManager.updateBadgeUI(null, target);
       }
     }
 
@@ -2669,6 +2922,183 @@
       });
     }
 
+
+    /* ==========================================================================
+       СИСТЕМА АВТООПРЕДЕЛЕНИЯ УСТРОЙСТВА (SMARTPHONE vs PC vs TABLET)
+       ========================================================================== */
+    const DeviceManager = {
+      detect() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlRole = (urlParams.get('role') || urlParams.get('mode') || '').toLowerCase();
+        const hasCaptainParam = urlParams.has('captain') || urlRole === 'captain' || urlRole === 'phone' || urlRole === 'mobile';
+        const hasProjectorParam = urlParams.has('projector') || urlRole === 'projector' || urlRole === 'screen';
+        const hasHostParam = urlParams.has('host') || urlRole === 'host' || urlRole === 'lobby';
+        const roomParam = urlParams.get('room') || urlParams.get('code');
+
+        const ua = navigator.userAgent || '';
+        const isMobileUA = /Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+        const isTabletUA = /iPad|Tablet|(Android(?!.*Mobile))/i.test(ua);
+        const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || window.matchMedia('(pointer: coarse)').matches;
+        
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        const isNarrow = w <= 768;
+
+        const isPhone = hasCaptainParam || (isMobileUA && !isTabletUA) || (isTouch && isNarrow) || (w <= 600);
+        const isTablet = !isPhone && (isTabletUA || (isTouch && w <= 1024));
+        const isDesktop = !isPhone && !isTablet;
+
+        let autoRole = 'host';
+        if (hasCaptainParam) {
+          autoRole = 'captain';
+        } else if (hasProjectorParam) {
+          autoRole = 'projector';
+        } else if (hasHostParam) {
+          autoRole = 'host';
+        } else if (isPhone) {
+          autoRole = 'captain'; // Смартфон -> открываем «Пульт взвода»!
+        } else {
+          autoRole = 'host'; // Компьютер -> открываем «Штаб ведущего»!
+        }
+
+        return {
+          isPhone,
+          isTablet,
+          isDesktop,
+          isTouch,
+          autoRole,
+          roomParam
+        };
+      },
+
+      init() {
+        const info = this.detect();
+
+        // Если передан код комнаты в ссылке, применяем его
+        if (info.roomParam) {
+          state.roomCode = info.roomParam.trim().toUpperCase();
+          const rDisplay = document.getElementById('roomCodeDisplay');
+          const qText = document.getElementById('qrCodeText');
+          const mInput = document.getElementById('mobileRoomCodeInput');
+          if (rDisplay) rDisplay.textContent = state.roomCode;
+          if (qText) qText.textContent = state.roomCode;
+          if (mInput) mInput.value = state.roomCode;
+        }
+
+        // Применяем классы устройства на body
+        document.body.classList.remove('device-phone', 'device-tablet', 'device-desktop', 'has-touch');
+        if (info.isPhone) document.body.classList.add('device-phone');
+        else if (info.isTablet) document.body.classList.add('device-tablet');
+        else document.body.classList.add('device-desktop');
+        if (info.isTouch) document.body.classList.add('has-touch');
+
+        // Проверяем приоритет выбора роли
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasExplicitParam = urlParams.has('role') || urlParams.has('captain') || urlParams.has('projector') || urlParams.has('host');
+        const savedRole = sessionStorage.getItem('ovp_user_role');
+
+        let targetRole = info.autoRole;
+        if (!hasExplicitParam && savedRole) {
+          targetRole = savedRole;
+        }
+
+        switchTab(targetRole, false);
+        this.updateBadgeUI(info, targetRole);
+
+        // Клик по бейджу в шапке переключает режимы Телефон / ПК
+        const badgeBtn = document.getElementById('deviceModeBadge');
+        if (badgeBtn) {
+          badgeBtn.addEventListener('click', () => {
+            triggerHaptic(8);
+            sfx.init();
+            const nextRole = (state.activeTab === 'captain') ? 'host' : 'captain';
+            switchTab(nextRole, true);
+          });
+        }
+
+        // Кнопка копирования мобильной ссылки
+        const copyBtn = document.getElementById('copyMobileJoinLinkBtn');
+        if (copyBtn) {
+          copyBtn.addEventListener('click', async () => {
+            triggerHaptic(10);
+            sfx.init();
+
+            const cleanUrl = window.location.origin + window.location.pathname;
+            const joinUrl = `${cleanUrl}?role=captain&room=${encodeURIComponent(state.roomCode)}`;
+
+            try {
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(joinUrl);
+              } else {
+                const ta = document.createElement('textarea');
+                ta.value = joinUrl;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+              }
+
+              const copyAlert = document.getElementById('copyLinkAlert');
+              if (copyAlert) {
+                copyAlert.style.display = 'block';
+                setTimeout(() => { copyAlert.style.display = 'none'; }, 4000);
+              }
+
+              const copyText = document.getElementById('copyLinkText');
+              if (copyText) {
+                const orig = copyText.textContent;
+                copyText.textContent = '✓ Ссылка скопирована!';
+                setTimeout(() => { copyText.textContent = orig; }, 3000);
+              }
+              sfx.correct();
+            } catch(err) {
+              prompt('Скопируйте ссылку для смартфонов:', joinUrl);
+            }
+          });
+        }
+
+        // Слушатель изменения ориентации и размера экрана
+        window.addEventListener('resize', () => {
+          this.handleResize();
+        });
+      },
+
+      updateBadgeUI(info, activeRole) {
+        if (!info) info = this.detect();
+        const role = activeRole || state.activeTab;
+
+        const badgeIcon = document.getElementById('deviceModeIcon');
+        const badgeLabel = document.getElementById('deviceModeLabel');
+        const detectText = document.getElementById('deviceDetectText');
+
+        const deviceName = info.isPhone ? 'Смартфон' : info.isTablet ? 'Планшет' : 'ПК';
+        
+        let roleName = 'Штаб';
+        let roleIcon = '🎖️';
+        if (role === 'captain') {
+          roleName = 'Пульт взвода';
+          roleIcon = '📱';
+        } else if (role === 'projector') {
+          roleName = 'Экран игры';
+          roleIcon = '🖥️';
+        }
+
+        if (badgeIcon) badgeIcon.textContent = roleIcon;
+        if (badgeLabel) badgeLabel.textContent = `${deviceName}: ${roleName}`;
+        if (detectText) detectText.textContent = `Авто: ${deviceName} → ${roleName}`;
+      },
+
+      handleResize() {
+        const info = this.detect();
+        document.body.classList.remove('device-phone', 'device-tablet', 'device-desktop');
+        if (info.isPhone) document.body.classList.add('device-phone');
+        else if (info.isTablet) document.body.classList.add('device-tablet');
+        else document.body.classList.add('device-desktop');
+        this.updateBadgeUI(info, state.activeTab);
+        drawMainWheel();
+      }
+    };
+
     // Инициализация при старте страницы
     const enabledOnStart = state.questions.filter(q => q.enabled);
     state.activeRoundList = shuffleArray(enabledOnStart.length > 0 ? enabledOnStart : state.questions);
@@ -2678,6 +3108,7 @@
     renderMobileSelect();
     renderProjector();
     drawMainWheel();
+    DeviceManager.init();
 
     // Восстановление сессии капитана при обновлении вкладки
     const savedCaptain = sessionStorage.getItem('ovp_captain_team_id');

@@ -1674,6 +1674,7 @@
     /* СИНХРОНИЗАЦИЯ: FIREBASE REALTIME DB + LOCAL FALLBACK */
     const syncChannel = new BroadcastChannel('ovp_pole_chudes_sync');
     const processedActionIds = new Set();
+    const localClientId = 'client_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
     let currentFirebaseRoom = null;
 
     function setupFirebaseListeners(roomCode) {
@@ -1703,6 +1704,7 @@
     function broadcastState() {
       const payload = {
         type: 'STATE_UPDATE',
+        senderId: localClientId,
         roomCode: state.roomCode,
         teams: state.teams,
         activeRoundList: state.activeRoundList,
@@ -1730,6 +1732,7 @@
     function sendAction(actionData) {
       actionData._id = 'act_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
       actionData._ts = Date.now();
+      actionData.senderId = localClientId;
       actionData.roomCode = state.roomCode;
       processedActionIds.add(actionData._id);
 
@@ -1745,6 +1748,7 @@
 
     function handleIncomingSync(data) {
       if (!data || data.roomCode !== state.roomCode) return;
+      if (data.senderId === localClientId) return; // Игнорируем собственное эхо
 
       if (data._id) {
         if (processedActionIds.has(data._id)) return;
@@ -1785,6 +1789,10 @@
       } else if (data.type === 'ACTION_GUESS_FULL_WORD') {
         if (state.activeTab === 'projector' || state.activeTab === 'host') {
           processFullWordChoice(data.word);
+        }
+      } else if (data.type === 'ACTION_PICK_PLUS') {
+        if (state.activeTab === 'projector' || state.activeTab === 'host') {
+          handlePlusSelection(data.letter);
         }
       } else if (data.type === 'ACTION_REGISTER_CUSTOM_TEAM') {
         let team = state.teams.find(t => t.id === data.teamId || t.name.toLowerCase() === data.teamName.toLowerCase());
@@ -2400,8 +2408,9 @@
     function springSettleWheel(isGameResult) {
       const numSectors = SECTORS.length;
       const arc = (2 * Math.PI) / numSectors;
-      const currentIdx = Math.round(state.wheelAngle / arc);
-      const targetAngle = currentIdx * arc;
+      // Центрируем стрелку (3*pi/2) строго по центру сектора (+0.5 * arc)
+      const currentIdx = Math.round((state.wheelAngle - 0.5 * arc) / arc);
+      const targetAngle = (currentIdx + 0.5) * arc;
       const startAngle = state.wheelAngle;
       const diff = targetAngle - startAngle;
 
@@ -2419,6 +2428,8 @@
           momentumFrameId = requestAnimationFrame(springFrame);
         } else {
           momentumFrameId = null;
+          state.wheelAngle = targetAngle;
+          drawMainWheel();
           if (isGameResult) {
             state.isSpinning = false;
             evalWheelResult();
@@ -2467,8 +2478,7 @@
         if (progress < 1) {
           momentumFrameId = requestAnimationFrame(frame);
         } else {
-          state.isSpinning = false;
-          evalWheelResult();
+          springSettleWheel(true);
         }
       }
 
@@ -2525,7 +2535,13 @@
 
     function handlePlusSelection(char) {
       if (state.turnState !== 'PICK_PLUS') return;
-      state.revealedLetters.push(char);
+      const matchesChar = (c) => (c === char) || (char === 'Е' && c === 'Ё') || (char === 'Ё' && c === 'Е');
+      state.currentWord.split('').forEach(c => {
+        if (matchesChar(c)) {
+          if (!state.revealedLetters.includes(c)) state.revealedLetters.push(c);
+          state.guessedLettersHistory[c] = 'correct';
+        }
+      });
       state.guessedLettersHistory[char] = 'correct';
 
       sfx.correct();
@@ -2544,14 +2560,20 @@
       const activePlatoon = (state.teams && state.teams.length > 0) ? state.teams[state.currentTeamIdx % state.teams.length] : null;
       if (!activePlatoon) return;
 
-      const hasLetter = state.currentWord.includes(char);
+      const matchesChar = (c) => (c === char) || (char === 'Е' && c === 'Ё') || (char === 'Ё' && c === 'Е');
+      const hasLetter = state.currentWord.split('').some(matchesChar);
 
       if (hasLetter) {
-        state.revealedLetters.push(char);
+        state.currentWord.split('').forEach(c => {
+          if (matchesChar(c)) {
+            if (!state.revealedLetters.includes(c)) state.revealedLetters.push(c);
+            state.guessedLettersHistory[c] = 'correct';
+          }
+        });
         state.guessedLettersHistory[char] = 'correct';
         sfx.correct();
 
-        const count = state.currentWord.split('').filter(c => c === char).length;
+        const count = state.currentWord.split('').filter(matchesChar).length;
         const pts = (state.currentSector && state.currentSector.value) ? state.currentSector.value : 100;
         const total = pts * count;
         activePlatoon.score += total;
@@ -2562,6 +2584,8 @@
         mainSectorBanner.textContent = `Верно! Буква «${char}» (+${total} б.)! Крутите снова.`;
       } else {
         state.guessedLettersHistory[char] = 'wrong';
+        if (char === 'Е') state.guessedLettersHistory['Ё'] = 'wrong';
+        if (char === 'Ё') state.guessedLettersHistory['Е'] = 'wrong';
         sfx.wrong();
         mainSectorBanner.textContent = `Буквы «${char}» нет! Ход переходит.`;
         setTimeout(() => { cycleTurn(); }, 1200);
@@ -2577,7 +2601,8 @@
       const activePlatoon = (state.teams && state.teams.length > 0) ? state.teams[state.currentTeamIdx % state.teams.length] : null;
       if (!activePlatoon) return;
 
-      if (clean === state.currentWord) {
+      const norm = (s) => (s || '').replace(/Ё/g, 'Е');
+      if (norm(clean) === norm(state.currentWord)) {
         sfx.fanfare();
         confetti.blast(110);
         state.currentWord.split('').forEach(c => {
@@ -2609,7 +2634,8 @@
     });
 
     function checkRoundCompletion() {
-      const allDone = state.currentWord.split('').every(c => state.revealedLetters.includes(c));
+      if (!state.currentWord) return false;
+      const allDone = state.currentWord.split('').every(c => !ALPHABET.includes(c) || state.revealedLetters.includes(c));
       if (allDone) {
         sfx.fanfare();
         confetti.blast(100);
@@ -2642,11 +2668,25 @@
       broadcastState();
     }
 
-    masterPassTurnBtn.addEventListener('click', () => cycleTurn());
+    masterPassTurnBtn.addEventListener('click', () => {
+      if (momentumFrameId) {
+        cancelAnimationFrame(momentumFrameId);
+        momentumFrameId = null;
+      }
+      state.isSpinning = false;
+      mainSpinBtn.disabled = false;
+      cycleTurn();
+    });
 
     endGameBackToLobbyBtn.addEventListener('click', () => {
       if (confirm("Завершить текущую игру и перейти в лобби?")) {
+        if (momentumFrameId) {
+          cancelAnimationFrame(momentumFrameId);
+          momentumFrameId = null;
+        }
+        state.isSpinning = false;
         switchTab('host');
+        broadcastState();
       }
     });
 
@@ -2795,7 +2835,7 @@
       if (!state.captainTeamId) return;
 
       const activePlatoon = (state.teams && state.teams.length > 0) ? state.teams[state.currentTeamIdx % state.teams.length] : null;
-      const isMyTurn = activePlatoon && activePlatoon.id === state.captainTeamId;
+      const isMyTurn = activePlatoon && String(activePlatoon.id) === String(state.captainTeamId);
 
       if (isMyTurn) {
         mobileTurnBanner.className = 'mobile-turn-banner my-turn';
@@ -2835,7 +2875,13 @@
       }
 
       mobileKeypadGrid.innerHTML = '';
-      const canPick = isMyTurn && state.turnState === 'PICK_LETTER';
+      const isPickLetter = state.turnState === 'PICK_LETTER';
+      const isPickPlus = state.turnState === 'PICK_PLUS';
+      const canPick = isMyTurn && (isPickLetter || isPickPlus);
+
+      if (isMyTurn && isPickPlus) {
+        mobileTurnSubtitle.textContent = 'Сектор Плюс: выберите любую закрытую букву на клавиатуре!';
+      }
       ALPHABET.forEach(char => {
         const btn = document.createElement('button');
         btn.className = 'key-cap';
@@ -2853,12 +2899,22 @@
         }
 
         btn.addEventListener('click', () => {
+          if (btn.disabled) return;
+          btn.disabled = true;
           sfx.init();
-          sendAction({
-            type: 'ACTION_GUESS_LETTER',
-            roomCode: state.roomCode,
-            letter: char
-          });
+          if (state.turnState === 'PICK_PLUS') {
+            sendAction({
+              type: 'ACTION_PICK_PLUS',
+              roomCode: state.roomCode,
+              letter: char
+            });
+          } else {
+            sendAction({
+              type: 'ACTION_GUESS_LETTER',
+              roomCode: state.roomCode,
+              letter: char
+            });
+          }
         });
         mobileKeypadGrid.appendChild(btn);
       });
@@ -2927,6 +2983,13 @@
     window.addEventListener('keydown', (e) => {
       if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'SELECT')) return;
       if (state.activeTab !== 'projector') return;
+
+      if (state.turnState === 'NEED_SPIN' && (e.code === 'Space' || e.key === ' ')) {
+        e.preventDefault();
+        spinMainWheel();
+        return;
+      }
+
       if (state.turnState !== 'PICK_LETTER') return;
 
       let key = e.key.toUpperCase();

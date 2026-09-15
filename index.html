@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Поле Чудес: Основы военной подготовки</title>
+
+  <!-- Firebase SDK (Режим Compat для запуска без сборщиков и npm) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
   <style>
     /* ==========================================================================
        APPLE DESIGN SYSTEM & MILITARY THEME VARIABLES
@@ -64,9 +69,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ==========================================================================
-       ХЕДЕР (APPLE TRANSLUCENT NAVIGATION)
-       ========================================================================== */
+    /* ХЕДЕР */
     header {
       background: rgba(7, 28, 51, 0.92);
       backdrop-filter: blur(24px) saturate(180%);
@@ -106,9 +109,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.6);
       transition: transform var(--transition-fast);
     }
-    .brand:active .brand-insignia {
-      transform: scale(0.94);
-    }
+    .brand:active .brand-insignia { transform: scale(0.94); }
 
     .brand-title h1 {
       font-size: 1.15rem;
@@ -123,15 +124,12 @@
       letter-spacing: 0.02em;
     }
 
-
-
     .header-actions {
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    /* Кнопки-пилюли в стиле iOS */
     .pill-btn {
       background: rgba(255, 255, 255, 0.12);
       border: 1px solid rgba(255, 255, 255, 0.2);
@@ -147,16 +145,10 @@
       transition: all var(--transition-fast);
       backdrop-filter: blur(10px);
     }
-    .pill-btn:hover {
-      background: rgba(255, 255, 255, 0.22);
-    }
-    .pill-btn:active {
-      transform: scale(0.96);
-    }
+    .pill-btn:hover { background: rgba(255, 255, 255, 0.22); }
+    .pill-btn:active { transform: scale(0.96); }
 
-    /* ==========================================================================
-       ПЕРЕКЛЮЧАТЕЛЬ РОЛЕЙ (APPLE SEGMENTED CONTROL)
-       ========================================================================== */
+    /* ПЕРЕКЛЮЧАТЕЛЬ РОЛЕЙ */
     .role-bar-container {
       max-width: 1360px;
       margin: 1.2rem auto 0.4rem;
@@ -197,9 +189,7 @@
       color: var(--primary-navy);
       box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     }
-    .segmented-item:active {
-      transform: scale(0.97);
-    }
+    .segmented-item:active { transform: scale(0.97); }
 
     .room-badge {
       display: inline-flex;
@@ -220,7 +210,6 @@
       letter-spacing: 1px;
     }
 
-    /* ОСНОВНОЙ КОНТЕНТ */
     main {
       flex: 1;
       max-width: 1360px;
@@ -235,22 +224,13 @@
       display: none;
       animation: springFadeIn 0.35s var(--spring-smooth);
     }
-    .view-screen.active {
-      display: block;
-    }
+    .view-screen.active { display: block; }
 
     @keyframes springFadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px) scale(0.99);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      from { opacity: 0; transform: translateY(8px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* КАРТОЧКИ (FROSTED GLASS EFFECT) */
     .glass-card {
       background: var(--card-bg);
       backdrop-filter: blur(20px) saturate(180%);
@@ -266,14 +246,11 @@
     .glass-card::before {
       content: "";
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 1px;
       background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.8), rgba(255,255,255,0));
     }
 
-    /* КНОПКИ */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -290,9 +267,7 @@
       outline: none;
       text-decoration: none;
     }
-    .btn:active {
-      transform: scale(0.96);
-    }
+    .btn:active { transform: scale(0.96); }
     .btn-primary {
       background: var(--primary-navy);
       color: #FFFFFF;
@@ -318,17 +293,13 @@
       color: #FFFFFF;
       box-shadow: 0 4px 12px rgba(171, 31, 3, 0.25);
     }
-    .btn-red:hover:not(:disabled) {
-      background: var(--accent-red-hover);
-    }
+    .btn-red:hover:not(:disabled) { background: var(--accent-red-hover); }
     .btn-secondary {
       background: #FFFFFF;
       border: 1px solid var(--border-subtle);
       color: var(--text-main);
     }
-    .btn-secondary:hover:not(:disabled) {
-      background: #F8FAFD;
-    }
+    .btn-secondary:hover:not(:disabled) { background: #F8FAFD; }
     .btn:disabled {
       opacity: 0.45;
       cursor: not-allowed;
@@ -352,17 +323,13 @@
       box-shadow: 0 0 0 3px rgba(11, 45, 80, 0.14);
     }
 
-    /* ==========================================================================
-       ЭКРАН 1: ШТАБ ВЕДУЩЕГО (ЛОББИ & ПОДКЛЮЧЕНИЕ ТЕЛЕФОНОВ)
-       ========================================================================== */
+    /* ШТАБ ВЕДУЩЕГО */
     .lobby-grid {
       display: grid;
       grid-template-columns: 1fr 1.3fr;
       gap: 1.8rem;
     }
-    @media (max-width: 960px) {
-      .lobby-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 960px) { .lobby-grid { grid-template-columns: 1fr; } }
 
     .qr-join-card {
       background: linear-gradient(145deg, #092442, #071C33);
@@ -389,6 +356,7 @@
       padding: 10px;
       margin: 1rem 0;
       box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+      transition: transform 0.1s;
     }
 
     .code-display {
@@ -416,9 +384,7 @@
       border-color: var(--accent-gold);
       box-shadow: var(--shadow-subtle);
     }
-    .team-badge-row.connected {
-      border-left: 4px solid var(--success);
-    }
+    .team-badge-row.connected { border-left: 4px solid var(--success); }
 
     .status-dot {
       display: inline-block;
@@ -450,11 +416,7 @@
       border-color: var(--primary-navy);
       transform: translateY(-1px);
     }
-    .pill-btn-suggestion:active {
-      transform: scale(0.94);
-    }
 
-    /* СПИСОК ВОПРОСОВ В ШТАБЕ */
     .question-row {
       display: flex;
       gap: 12px;
@@ -471,20 +433,15 @@
       background: #F7F9FC;
     }
 
-    /* ==========================================================================
-       ЭКРАН 2: БОЛЬШОЙ ЭКРАН (ПРОЕКТОР / ИГРА)
-       ========================================================================== */
+    /* ЭКРАН ИГРЫ / ПРОЕКТОР */
     .projector-grid {
       display: grid;
       grid-template-columns: 280px 1fr;
       gap: 1.5rem;
       align-items: start;
     }
-    @media (max-width: 1024px) {
-      .projector-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 1024px) { .projector-grid { grid-template-columns: 1fr; } }
 
-    /* ТАБЛО СО СЛОВОМ (3D FLIP TILE ANIMATION) */
     .stage-board {
       background: linear-gradient(145deg, #09203A, #061628);
       border: 3px solid var(--accent-gold);
@@ -520,9 +477,7 @@
       position: relative;
       perspective: 1000px;
     }
-    @media (max-width: 650px) {
-      .tile-slot { width: 38px; height: 48px; }
-    }
+    @media (max-width: 650px) { .tile-slot { width: 38px; height: 48px; } }
 
     .tile-flipper {
       width: 100%;
@@ -533,9 +488,7 @@
       border-radius: var(--radius-sm);
       box-shadow: 0 6px 14px rgba(0,0,0,0.35);
     }
-    .tile-slot.revealed .tile-flipper {
-      transform: rotateY(180deg);
-    }
+    .tile-slot.revealed .tile-flipper { transform: rotateY(180deg); }
 
     .tile-card-face {
       position: absolute;
@@ -563,20 +516,15 @@
       transform: rotateY(180deg);
       box-shadow: inset 0 0 10px rgba(198, 159, 90, 0.25);
     }
-    @media (max-width: 650px) {
-      .tile-back { font-size: 1.4rem; }
-    }
+    @media (max-width: 650px) { .tile-back { font-size: 1.4rem; } }
 
-    /* БАРАБАН И КЛАВИАТУРА НА БОЛЬШОМ ЭКРАНЕ */
     .game-console {
       display: grid;
       grid-template-columns: 360px 1fr;
       gap: 1.8rem;
       align-items: center;
     }
-    @media (max-width: 900px) {
-      .game-console { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 900px) { .game-console { grid-template-columns: 1fr; } }
 
     .wheel-stage {
       display: flex;
@@ -602,17 +550,14 @@
       touch-action: none;
       cursor: grab;
     }
-    #mainWheelCanvas:active {
-      cursor: grabbing;
-    }
+    #mainWheelCanvas:active { cursor: grabbing; }
 
     .wheel-pointer {
       position: absolute;
       top: -14px;
       left: 50%;
       transform: translateX(-50%);
-      width: 0;
-      height: 0;
+      width: 0; height: 0;
       border-left: 15px solid transparent;
       border-right: 15px solid transparent;
       border-top: 26px solid var(--accent-red);
@@ -622,7 +567,6 @@
       transition: transform 0.05s ease-out;
     }
 
-    /* ТАБЛИЦА ВЗВОДОВ В БОКОВОЙ ПАНЕЛИ */
     .platoon-card {
       background: #FFFFFF;
       border: 2px solid var(--border-subtle);
@@ -653,7 +597,6 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
-    /* КЛАВИАТУРА */
     .virtual-keyboard {
       display: grid;
       grid-template-columns: repeat(11, 1fr);
@@ -685,9 +628,6 @@
       border-color: var(--primary-navy);
       transform: translateY(-2px);
     }
-    .key-cap:active:not(:disabled) {
-      transform: scale(0.92);
-    }
     .key-cap:disabled {
       background: #EAEEF4;
       color: #9AA7B6;
@@ -707,9 +647,7 @@
       text-decoration: line-through;
     }
 
-    /* ==========================================================================
-       ЭКРАН 3: МОБИЛЬНЫЙ ПУЛЬТ ЛИДЕРА ВЗВОДА (SMARTPHONE CONTROLLER)
-       ========================================================================== */
+    /* ПУЛЬТ ЛИДЕРА ВЗВОДА (СМАРТФОН) */
     .mobile-shell {
       max-width: 480px;
       margin: 0 auto;
@@ -782,10 +720,7 @@
     /* МОДАЛЬНЫЕ ОКНА */
     .modal-backdrop {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(7, 28, 51, 0.65);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
@@ -816,65 +751,16 @@
       text-align: center;
     }
 
-    /* Холст конфетти */
     #confettiCanvas {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       pointer-events: none;
       z-index: 2000;
     }
-    /* Apple Design: Touch Action & Latency Elimination (§1) */
+
     .btn, .pill-btn, .segmented-item, .key-cap, .pill-btn-suggestion {
       touch-action: manipulation;
-    }
-    .btn:active:not(:disabled), .pill-btn:active, .segmented-item:active, .key-cap:active:not(:disabled) {
-      transform: scale(0.95);
-      transition: transform 80ms var(--spring-smooth);
-    }
-
-    /* Apple Design: Accessibility & Reduced Motion (§14) */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-      .tile-flipper {
-        transition: none !important;
-      }
-      .modal-backdrop.active {
-        animation: none !important;
-      }
-      .mobile-turn-banner.my-turn {
-        animation: none !important;
-      }
-    }
-
-    @media (prefers-reduced-transparency: reduce) {
-      header {
-        background: #071C33 !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-      .glass-card {
-        background: #FFFFFF !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-      .segmented-control {
-        background: #E2E8F0 !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-      .modal-backdrop {
-        background: rgba(7, 28, 51, 0.92) !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
     }
   </style>
 </head>
@@ -899,7 +785,7 @@
     </div>
   </header>
 
-  <!-- ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМОВ (СЕГМЕНТЕД КОНТРОЛЛЕР) -->
+  <!-- ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМОВ -->
   <div class="role-bar-container">
     <div class="segmented-control">
       <button class="segmented-item active" id="tabHostLobby">
@@ -920,13 +806,10 @@
   </div>
 
   <main>
-    <!-- ====================================================================
-         ЭКРАН 1: ШТАБ ВЕДУЩЕГО (НАСТРОЙКА ЛОББИ & ПОДКЛЮЧЕНИЕ С ТЕЛЕФОНОВ)
-         ==================================================================== -->
+    <!-- ЭКРАН 1: ШТАБ ВЕДУЩЕГО -->
     <div class="view-screen active" id="screenHostLobby">
       <div class="lobby-grid">
         
-        <!-- Колонка 1: QR-код для телефонов и список взводов -->
         <div>
           <!-- Карточка подключения со смартфона -->
           <div class="qr-join-card">
@@ -935,12 +818,11 @@
             </div>
             <h3 style="font-size: 1.15rem; color: #FFFFFF;">Вход командиров с телефонов</h3>
             <p style="font-size: 0.85rem; color: #D1DDEB; margin-top: 4px;">
-              Дисциплина «Основы военной подготовки» • Откройте на смартфоне вкладку <strong>«Пульт взвода»</strong> или введите код:
+              Откройте сайт со смартфона, выберите вкладку <strong>«Пульт взвода»</strong> и введите код:
             </p>
             
             <div class="code-display" id="qrCodeText">ОВП-42</div>
 
-            <!-- Векторный QR-паттерн -->
             <div class="qr-box" id="qrCanvasContainer">
               <svg width="130" height="130" viewBox="0 0 100 100" fill="#0B2D50">
                 <rect x="0" y="0" width="30" height="30" fill="#0B2D50" rx="4"/>
@@ -973,7 +855,7 @@
             </div>
 
             <span style="font-size: 0.78rem; opacity: 0.8;">
-              Синхронизация происходит автоматически в реальном времени
+              Синхронизация через Firebase Realtime Database в реальном времени
             </span>
           </div>
 
@@ -991,13 +873,11 @@
               <button class="btn btn-primary" id="addTeamBtn">Добавить</button>
             </div>
 
-            <div id="hostTeamsListUI">
-              <!-- Список команд рендерится через JS -->
-            </div>
+            <div id="hostTeamsListUI"></div>
           </div>
         </div>
 
-        <!-- Колонка 2: Банк вопросов по ОВП и Запуск турнира -->
+        <!-- Банк вопросов по ОВП и Запуск турнира -->
         <div>
           <div class="glass-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 8px;">
@@ -1007,22 +887,19 @@
               </div>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-gold-dark); background: #FFFDF5; border: 1px solid var(--accent-gold); padding: 4px 10px; border-radius: 20px;">
-                  🔀 Порядок: Случайный (Рандом)
+                  🔀 Порядок: Случайный
                 </span>
                 <span id="selectedQuestionsCountBadge" style="font-size: 0.85rem; font-weight: 700; background: #EEF3F8; padding: 4px 12px; border-radius: 20px; color: var(--primary-navy);">
                   8 вопросов
                 </span>
-                <span id="answersVisibilityBadge" style="font-size: 0.8rem; font-weight: 700; background: #F0F4F8; color: var(--text-secondary); padding: 4px 10px; border-radius: 20px; transition: all 0.2s ease;">
+                <span id="answersVisibilityBadge" style="font-size: 0.8rem; font-weight: 700; background: #F0F4F8; color: var(--text-secondary); padding: 4px 10px; border-radius: 20px;">
                   🔒 Ответы скрыты
                 </span>
               </div>
             </div>
 
-            <div id="hostQuestionsListUI" style="max-height: 380px; overflow-y: auto; padding-right: 4px; margin-bottom: 1.2rem;">
-              <!-- Список вопросов -->
-            </div>
+            <div id="hostQuestionsListUI" style="max-height: 380px; overflow-y: auto; padding-right: 4px; margin-bottom: 1.2rem;"></div>
 
-            <!-- Добавление своего вопроса -->
             <div style="background: #F8FAFD; border: 1px dashed var(--border-subtle); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.5rem;">
               <h4 style="font-size: 0.9rem; color: var(--primary-navy); margin-bottom: 0.6rem;">➕ Добавить авторский вопрос в банк</h4>
               <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px;">
@@ -1034,7 +911,6 @@
               </button>
             </div>
 
-            <!-- Большая кнопка запуска -->
             <button class="btn btn-gold" id="startTournamentBtn" style="width: 100%; padding: 14px; font-size: 1.1rem;">
               ⚔️ Запустить викторину (Случайный порядок раундов)
             </button>
@@ -1044,9 +920,7 @@
       </div>
     </div>
 
-    <!-- ====================================================================
-         ЭКРАН 2: ЭКРАН ИГРЫ / ПРОЕКТОР (БОЛЬШОЕ ТАБЛО И БАРАБАН)
-         ==================================================================== -->
+    <!-- ЭКРАН 2: ЭКРАН ИГРЫ / ПРОЕКТОР -->
     <div class="view-screen" id="screenProjector">
       <div class="projector-grid">
         
@@ -1059,11 +933,8 @@
                 Раунд 1/8
               </span>
             </div>
-            <div id="projectorScoreboardUI">
-              <!-- Карточки взводов -->
-            </div>
+            <div id="projectorScoreboardUI"></div>
 
-            <!-- Кнопки управления ведущего -->
             <div style="margin-top: 1.2rem; display: flex; flex-direction: column; gap: 8px;">
               <button class="btn btn-secondary" id="masterPassTurnBtn" style="font-size: 0.85rem; padding: 8px;">
                 ⏭️ Передать ход вручную
@@ -1075,26 +946,20 @@
           </div>
         </div>
 
-        <!-- Центральная сцена: Табло со словом, Барабан, Клавиатура -->
+        <!-- Центральная сцена -->
         <div>
-          <!-- Табло со словом -->
           <div class="stage-board">
-            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(198, 159, 90, 0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold-light); padding: 5px 16px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(198, 159, 90, 0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold-light); padding: 5px 16px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; text-transform: uppercase;">
               <span>🎖️ Военная подготовка</span>
               <span>•</span>
               <span>ВУЦ</span>
               <span>•</span>
               <span>Основы военной подготовки</span>
             </div>
-            <div class="stage-question" id="currentQuestionDisplay">
-              Вопрос загружается...
-            </div>
-            <div class="tiles-deck" id="tilesDeckContainer">
-              <!-- Плашки букв -->
-            </div>
+            <div class="stage-question" id="currentQuestionDisplay">Вопрос загружается...</div>
+            <div class="tiles-deck" id="tilesDeckContainer"></div>
           </div>
 
-          <!-- Пульт: Барабан и Алфавит -->
           <div class="glass-card">
             <div class="game-console">
               
@@ -1123,11 +988,8 @@
                   </span>
                 </div>
 
-                <div class="virtual-keyboard" id="mainKeyboardGrid">
-                  <!-- Буквы (А-Я) -->
-                </div>
+                <div class="virtual-keyboard" id="mainKeyboardGrid"></div>
 
-                <!-- Риск-игра: назвать слово сразу -->
                 <div style="margin-top: 1.2rem; background: #F8FAFD; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px;">
                   <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px;">
                     <span>Риск-игра: Назвать слово целиком</span>
@@ -1148,13 +1010,10 @@
       </div>
     </div>
 
-    <!-- ====================================================================
-         ЭКРАН 3: ПУЛЬТ ЛИДЕРА ВЗВОДА (ДЛЯ СМАРТФОНОВ)
-         ==================================================================== -->
+    <!-- ЭКРАН 3: ПУЛЬТ ЛИДЕРА ВЗВОДА (ТЕЛЕФОН) -->
     <div class="view-screen" id="screenCaptain">
       <div class="mobile-shell">
         
-        <!-- Экран авторизации взвода на телефоне -->
         <div class="glass-card" id="mobileLoginCard">
           <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 800; color: var(--accent-gold-dark); letter-spacing: 0.8px; margin-bottom: 4px;">
             Основы военной подготовки
@@ -1163,7 +1022,7 @@
             Вход командира взвода
           </h3>
           <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.2rem;">
-            Введите код сессии и придумайте собственное название для своей команды (или выберите из списка).
+            Введите код сессии и придумайте название для своей команды (или выберите из списка).
           </p>
 
           <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.4rem;">
@@ -1173,12 +1032,12 @@
             </div>
 
             <div>
-              <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 4px;">НАЗВАНИЕ ВАШЕЙ КОМАНДЫ (СВОЁ ИЛИ ИЗ СПИСКА):</label>
+              <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 4px;">НАЗВАНИЕ ВАШЕЙ КОМАНДЫ:</label>
               <input type="text" id="mobileCustomTeamInput" class="input-box" placeholder="Например: Десант, Витязи, Гвардия..." maxlength="25" style="font-weight: 700; font-size: 1rem;">
             </div>
 
             <div>
-              <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600;">Идеи названий взводов:</div>
+              <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600;">Идеи названий:</div>
               <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;">
                 <button type="button" class="pill-btn-suggestion" onclick="setTeamNameSuggestion('Десант')">Десант</button>
                 <button type="button" class="pill-btn-suggestion" onclick="setTeamNameSuggestion('Разведка')">Разведка</button>
@@ -1187,9 +1046,7 @@
                 <button type="button" class="pill-btn-suggestion" onclick="setTeamNameSuggestion('Гвардия')">Гвардия</button>
                 <button type="button" class="pill-btn-suggestion" onclick="setTeamNameSuggestion('Витязи')">Витязи</button>
               </div>
-              <select id="mobileTeamSelect" class="input-box" style="font-size: 0.85rem; font-weight: 600; padding: 8px 12px;">
-                <!-- Варианты заполняются динамически -->
-              </select>
+              <select id="mobileTeamSelect" class="input-box" style="font-size: 0.85rem; font-weight: 600; padding: 8px 12px;"></select>
             </div>
           </div>
 
@@ -1198,36 +1055,25 @@
           </button>
         </div>
 
-        <!-- Экран управления игрой (когда взвод авторизован) -->
+        <!-- Управление на телефоне -->
         <div id="mobileGameControls" style="display: none; flex-direction: column; gap: 1rem;">
           
-          <!-- Баннер статуса хода -->
           <div class="mobile-turn-banner" id="mobileTurnBanner">
             <div class="mobile-status-badge waiting" id="mobileStatusBadge">Ожидание хода</div>
-            <h2 style="font-size: 1.3rem; color: var(--primary-navy);" id="mobileTurnTitle">
-              Ходит другой взвод
-            </h2>
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;" id="mobileTurnSubtitle">
-              Внимание на общий экран проектора
-            </p>
+            <h2 style="font-size: 1.3rem; color: var(--primary-navy);" id="mobileTurnTitle">Ходит другой взвод</h2>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;" id="mobileTurnSubtitle">Внимание на общий экран проектора</p>
           </div>
 
-          <!-- Активные элементы управления командира -->
           <div class="mobile-action-card" id="mobileActionCard">
-            <!-- Кнопка вращения барабана для смартфона -->
             <button class="btn btn-gold" id="mobileSpinBtn" style="width: 100%; padding: 16px; font-size: 1.15rem; margin-bottom: 1rem;">
               🎯 КРУТИТЬ БАРАБАН
             </button>
 
-            <!-- Алфавит для смартфона -->
             <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">
               Выберите букву (нажмите):
             </div>
-            <div class="mobile-keypad" id="mobileKeypadGrid">
-              <!-- Буквы для телефона -->
-            </div>
+            <div class="mobile-keypad" id="mobileKeypadGrid"></div>
 
-            <!-- Риск-слово для смартфона -->
             <div style="margin-top: 1.2rem; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
               <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">
                 НАЗВАТЬ ВСЁ СЛОВО (+1000 ОЧКОВ):
@@ -1239,7 +1085,6 @@
             </div>
           </div>
 
-          <!-- Кнопка смены взвода / отключения -->
           <button class="btn btn-secondary" id="mobileDisconnectBtn" style="font-size: 0.85rem;">
             ← Сменить взвод / Выйти
           </button>
@@ -1250,7 +1095,7 @@
     </div>
   </main>
 
-  <!-- МОДАЛЬНОЕ ОКНО СООБЩЕНИЙ И ПОБЕДЫ -->
+  <!-- МОДАЛЬНОЕ ОКНО СООБЩЕНИЙ -->
   <div class="modal-backdrop" id="appModal">
     <div class="modal-sheet">
       <div style="font-size: 2.8rem; margin-bottom: 0.8rem;" id="modalEmoji">🎉</div>
@@ -1261,18 +1106,39 @@
     </div>
   </div>
 
-  <!-- Холст конфетти -->
   <canvas id="confettiCanvas"></canvas>
 
   <script>
-    /* ХАПТИК (APPLE TACTILE VIBRATION API §13) */
+    /* ==========================================================================
+       КОНФИГУРАЦИЯ FIREBASE REALTIME DATABASE ИЗ ВАШЕГО ПРОЕКТА
+       ========================================================================== */
+    const firebaseConfig = {
+      apiKey: "AIzaSyDmyG4yRcg-XR8JuRbNlOMigiL24ngJyEo",
+      authDomain: "pole-chudes-da4b6.firebaseapp.com",
+      databaseURL: "https://pole-chudes-da4b6-default-rtdb.firebaseio.com",
+      projectId: "pole-chudes-da4b6",
+      storageBucket: "pole-chudes-da4b6.firebasestorage.app",
+      messagingSenderId: "1064735240657",
+      appId: "1:1064735240657:web:196993ba62006c3478b0f0",
+      measurementId: "G-NM8PEB81DF"
+    };
+
+    let db = null;
+    try {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+    } catch(err) {
+      console.warn("Firebase Init Error:", err);
+    }
+
+    /* ХАПТИК (APPLE TACTILE VIBRATION) */
     function triggerHaptic(pattern) {
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
         try { navigator.vibrate(pattern); } catch(e) {}
       }
     }
 
-    /* 1. АУДИО ДВИЖОК (WEB AUDIO API) */
+    /* АУДИО ДВИЖОК (WEB AUDIO API) */
     class SoundFX {
       constructor() {
         this.ctx = null;
@@ -1374,10 +1240,9 @@
         } catch(e) {}
       }
     }
-
     const sfx = new SoundFX();
 
-    /* 2. КОНФЕТТИ */
+    /* КОНФЕТТИ */
     class Confetti {
       constructor() {
         this.canvas = document.getElementById('confettiCanvas');
@@ -1439,17 +1304,17 @@
     }
     const confetti = new Confetti();
 
-    /* 3. АЛГОРИТМ СЛУЧАЙНОГО ПЕРЕМЕШИВАНИЯ (FISHER-YATES SHUFFLE) */
+    /* СЛУЧАЙНОЕ ПЕРЕМЕШИВАНИЕ (FISHER-YATES) */
     function shuffleArray(array) {
       const arr = [...array];
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
+        [arr[j], arr[i]] = [arr[i], arr[j]];
       }
       return arr;
     }
 
-    /* 4. ДАННЫЕ ОВП И КОНФИГУРАЦИЯ БАРАБАНА */
+    /* ДАННЫЕ И ВОПРОСЫ ПО ОВП */
     const DEFAULT_QUESTIONS = [
       { id: "q1", question: "Документ 1571 года царя Ивана IV Грозного о станичной и сторожевой службе, считающийся первым русским воинским уставом.", answer: "ПРИГОВОР", enabled: true },
       { id: "q2", question: "Составная часть военного искусства, охватывающая теорию и практику ведения боя подразделениями и частями.", answer: "ТАКТИКА", enabled: true },
@@ -1478,13 +1343,13 @@
 
     const ALPHABET = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ".split("");
 
-    /* 5. СОСТОЯНИЕ ПРИЛОЖЕНИЯ */
+    /* СОСТОЯНИЕ ИГРЫ */
     const state = {
       roomCode: "ОВП-42",
-      activeTab: "host", // 'host' | 'projector' | 'captain'
-      teams: [], // Без заготовок по умолчанию
+      activeTab: "host",
+      teams: [],
       questions: JSON.parse(JSON.stringify(DEFAULT_QUESTIONS)),
-      showAnswers: false, // Ответы скрыты по умолчанию (открываются по 5 нажатиям на QR-код)
+      showAnswers: false,
       activeRoundList: [],
       currentRoundIdx: 0,
       currentTeamIdx: 0,
@@ -1500,8 +1365,34 @@
       modalCallback: null
     };
 
-    /* 6. МЕЖВКЛАДОЧНАЯ СИНХРОНИЗАЦИЯ (BROADCASTCHANNEL + STORAGE) */
+    /* СИНХРОНИЗАЦИЯ: FIREBASE REALTIME DB + LOCAL FALLBACK */
     const syncChannel = new BroadcastChannel('ovp_pole_chudes_sync');
+    const processedActionIds = new Set();
+    let currentFirebaseRoom = null;
+
+    function setupFirebaseListeners(roomCode) {
+      if (!db || !roomCode) return;
+      if (currentFirebaseRoom === roomCode) return;
+      currentFirebaseRoom = roomCode;
+
+      const roomRef = db.ref('rooms/' + roomCode);
+
+      // Получаем обновления состояния
+      roomRef.child('state').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          handleIncomingSync(data);
+        }
+      });
+
+      // Слушаем действия команд (пультов)
+      roomRef.child('actions').limitToLast(15).on('child_added', (snapshot) => {
+        const action = snapshot.val();
+        if (action && action._id) {
+          handleIncomingSync(action);
+        }
+      });
+    }
 
     function broadcastState() {
       const payload = {
@@ -1518,16 +1409,46 @@
         turnState: state.turnState,
         currentSector: state.currentSector,
         wheelAngle: state.wheelAngle,
-        isSpinning: state.isSpinning
+        isSpinning: state.isSpinning,
+        _updatedAt: Date.now()
       };
+
       syncChannel.postMessage(payload);
-      try {
-        localStorage.setItem('ovp_game_state', JSON.stringify(payload));
-      } catch(e) {}
+      try { localStorage.setItem('ovp_game_state', JSON.stringify(payload)); } catch(e) {}
+
+      if (db && state.roomCode) {
+        db.ref('rooms/' + state.roomCode + '/state').set(payload);
+      }
+    }
+
+    function sendAction(actionData) {
+      actionData._id = 'act_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+      actionData._ts = Date.now();
+      actionData.roomCode = state.roomCode;
+      processedActionIds.add(actionData._id);
+
+      syncChannel.postMessage(actionData);
+      if (db && state.roomCode) {
+        db.ref('rooms/' + state.roomCode + '/actions').push(actionData);
+      }
+
+      if (state.activeTab === 'projector' || state.activeTab === 'host') {
+        handleIncomingSync(actionData);
+      }
     }
 
     function handleIncomingSync(data) {
       if (!data || data.roomCode !== state.roomCode) return;
+
+      if (data._id) {
+        if (processedActionIds.has(data._id)) return;
+        processedActionIds.add(data._id);
+        if (processedActionIds.size > 200) {
+          const first = processedActionIds.values().next().value;
+          processedActionIds.delete(first);
+        }
+      }
+
       if (data.type === 'STATE_UPDATE') {
         state.teams = data.teams || [];
         state.activeRoundList = data.activeRoundList || [];
@@ -1539,8 +1460,10 @@
         state.guessedLettersHistory = data.guessedLettersHistory || {};
         state.turnState = data.turnState;
         state.currentSector = data.currentSector;
-        state.wheelAngle = data.wheelAngle;
-        state.isSpinning = data.isSpinning;
+        if (!state.isSpinning) {
+          state.wheelAngle = data.wheelAngle || 0;
+        }
+        state.isSpinning = data.isSpinning || false;
 
         renderProjector();
         renderMobileView();
@@ -1550,9 +1473,13 @@
           spinMainWheel();
         }
       } else if (data.type === 'ACTION_GUESS_LETTER') {
-        processLetterChoice(data.letter);
+        if (state.activeTab === 'projector' || state.activeTab === 'host') {
+          processLetterChoice(data.letter);
+        }
       } else if (data.type === 'ACTION_GUESS_FULL_WORD') {
-        processFullWordChoice(data.word);
+        if (state.activeTab === 'projector' || state.activeTab === 'host') {
+          processFullWordChoice(data.word);
+        }
       } else if (data.type === 'ACTION_REGISTER_CUSTOM_TEAM') {
         let team = state.teams.find(t => t.id === data.teamId || t.name.toLowerCase() === data.teamName.toLowerCase());
         if (!team) {
@@ -1571,13 +1498,7 @@
         renderHostTeams();
         renderProjector();
         renderMobileSelect();
-        broadcastState();
-      } else if (data.type === 'ACTION_REGISTER_CAPTAIN') {
-        const t = state.teams.find(item => item.id === data.teamId);
-        if (t) {
-          t.isConnected = true;
-          renderHostTeams();
-          renderProjector();
+        if (state.activeTab === 'projector' || state.activeTab === 'host') {
           broadcastState();
         }
       }
@@ -1586,13 +1507,11 @@
     syncChannel.onmessage = (event) => handleIncomingSync(event.data);
     window.addEventListener('storage', (e) => {
       if (e.key === 'ovp_game_state' && e.newValue) {
-        try {
-          handleIncomingSync(JSON.parse(e.newValue));
-        } catch(err) {}
+        try { handleIncomingSync(JSON.parse(e.newValue)); } catch(err) {}
       }
     });
 
-    /* 7. УПРАВЛЕНИЕ ВКЛАДКАМИ */
+    /* ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК */
     const tabHostLobby = document.getElementById('tabHostLobby');
     const tabProjector = document.getElementById('tabProjector');
     const tabCaptain = document.getElementById('tabCaptain');
@@ -1628,7 +1547,7 @@
     tabProjector.addEventListener('click', () => switchTab('projector'));
     tabCaptain.addEventListener('click', () => switchTab('captain'));
 
-    /* 8. ЛОББИ ВЕДУЩЕГО (HOST SCREEN LOGIC) */
+    /* ШТАБ ВЕДУЩЕГО (ЛОГИКА) */
     const hostTeamsListUI = document.getElementById('hostTeamsListUI');
     const hostQuestionsListUI = document.getElementById('hostQuestionsListUI');
     const addTeamInput = document.getElementById('addTeamInput');
@@ -1647,7 +1566,7 @@
             <div style="font-size: 2rem; margin-bottom: 8px;">📡</div>
             <strong style="color: var(--primary-navy); font-size: 1rem; display: block; margin-bottom: 4px;">Команды ещё не подключились</strong>
             <p style="font-size: 0.84rem; line-height: 1.45; max-width: 380px; margin: 0 auto;">
-              Лидеры команд могут открыть сайт на смартфонах (код: <strong style="color: var(--accent-red); font-family: monospace;">${state.roomCode}</strong>) и ввести свои авторские названия, либо добавьте команду вручную в поле выше.
+              Лидеры команд могут открыть сайт на смартфонах (код: <strong style="color: var(--accent-red); font-family: monospace;">${state.roomCode}</strong>) и ввести названия взводов, либо добавьте команду вручную в поле выше.
             </p>
           </div>
         `;
@@ -1789,7 +1708,6 @@
         return;
       }
       
-      // СЛУЧАЙНЫЙ ПОРЯДОК: Перемешиваем выбранные вопросы случайным образом
       state.activeRoundList = shuffleArray(activeList);
       state.currentRoundIdx = 0;
       state.currentTeamIdx = 0;
@@ -1803,7 +1721,7 @@
       broadcastState();
     });
 
-    /* 9. ЛОГИКА ИГРОВОГО ЭКРАНА (PROJECTOR & WORD BOARD) */
+    /* ЛОГИКА ИГРОВОГО ЭКРАНА */
     const projectorRoundBadge = document.getElementById('projectorRoundBadge');
     const projectorScoreboardUI = document.getElementById('projectorScoreboardUI');
     const currentQuestionDisplay = document.getElementById('currentQuestionDisplay');
@@ -1818,7 +1736,6 @@
     const endGameBackToLobbyBtn = document.getElementById('endGameBackToLobbyBtn');
 
     function initStageRound() {
-      // Инициализируем раунды в случайном порядке
       if (!state.activeRoundList || state.activeRoundList.length === 0) {
         const enabledQuestions = state.questions.filter(q => q.enabled);
         state.activeRoundList = shuffleArray(enabledQuestions.length > 0 ? enabledQuestions : state.questions);
@@ -1847,7 +1764,6 @@
     }
 
     function renderProjector() {
-      // Гарантируем случайную инициализацию вопросов и слова
       if (!state.activeRoundList || state.activeRoundList.length === 0) {
         const enabledQuestions = state.questions.filter(q => q.enabled);
         state.activeRoundList = shuffleArray(enabledQuestions.length > 0 ? enabledQuestions : state.questions);
@@ -1866,7 +1782,6 @@
         currentQuestionDisplay.textContent = state.currentQuestion.question;
       }
 
-      // Рендер счета взводов
       projectorScoreboardUI.innerHTML = '';
       if (!state.teams || state.teams.length === 0) {
         projectorScoreboardUI.innerHTML = '<div style="color:var(--text-secondary);font-size:0.85rem;padding:12px;border:1px dashed var(--border-subtle);border-radius:var(--radius-md);text-align:center;">Команды ещё не подключились.<br><small>Войдите с телефона или добавьте в Штабе.</small></div>';
@@ -1888,7 +1803,6 @@
         });
       }
 
-      // Рендер табло букв (3D Flip)
       tilesDeckContainer.innerHTML = '';
       if (state.currentWord) {
         for (let i = 0; i < state.currentWord.length; i++) {
@@ -1913,7 +1827,6 @@
         }
       }
 
-      // Индикатор статуса хода
       const activePlatoon = (state.teams && state.teams.length > 0) ? state.teams[state.currentTeamIdx % state.teams.length] : null;
       if (!activePlatoon) {
         mainTurnIndicator.textContent = "Ожидание команд...";
@@ -1929,12 +1842,11 @@
         projectorFullWordInput.disabled = false;
         projectorFullWordBtn.disabled = false;
       } else if (state.turnState === 'PICK_PLUS') {
-        mainTurnIndicator.textContent = `${activePlatoon.name}: нажмите на любую скрытую букву на табло!`;
+        mainTurnIndicator.textContent = `${activePlatoon.name}: нажмите на любую закрытую букву на табло!`;
         mainSpinBtn.disabled = true;
         projectFullWordReset();
       }
 
-      // Клавиатура
       mainKeyboardGrid.innerHTML = '';
       const canPick = state.turnState === 'PICK_LETTER';
       ALPHABET.forEach(char => {
@@ -1964,7 +1876,7 @@
       });
     }
 
-    /* 10. ОТРИСОВКА БАРАБАНА (CANVAS) */
+    /* БАРАБАН (CANVAS) */
     const canvas = document.getElementById('mainWheelCanvas');
     const ctx = canvas.getContext('2d');
     const wheelPointer = document.getElementById('mainWheelPointer');
@@ -2017,7 +1929,6 @@
         ctx.restore();
       }
 
-      // Центральный медальон барабана
       ctx.beginPath();
       ctx.arc(0, 0, 36, 0, Math.PI * 2);
       const grad = ctx.createRadialGradient(0, 0, 4, 0, 0, 36);
@@ -2029,7 +1940,6 @@
       ctx.lineWidth = 3.5;
       ctx.stroke();
 
-      // Внутренний темно-синий круг
       ctx.beginPath();
       ctx.arc(0, 0, 27, 0, Math.PI * 2);
       ctx.fillStyle = "#0B2D50";
@@ -2038,7 +1948,6 @@
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      // Надпись в центре
       ctx.fillStyle = "#FFE8B8";
       ctx.font = "bold 13px -apple-system, sans-serif";
       ctx.textAlign = "center";
@@ -2048,9 +1957,6 @@
       ctx.restore();
     }
 
-    // =========================================================================
-    // APPLE FLUID GESTURES: DIRECT MANIPULATION, VELOCITY HANDOFF & MOMENTUM (§2, §5, §6)
-    // =========================================================================
     let isDraggingWheel = false;
     let dragStartPointerAngle = 0;
     let dragWheelStartAngle = 0;
@@ -2069,7 +1975,6 @@
       sfx.init();
       triggerHaptic(8);
 
-      // Interruptibility (§3): grab mid-spin interrupts motion cleanly
       if (momentumFrameId) {
         cancelAnimationFrame(momentumFrameId);
         momentumFrameId = null;
@@ -2099,7 +2004,6 @@
       state.wheelAngle += delta;
       dragStartPointerAngle = currentPointerAngle;
 
-      // Peg ticks & tactile haptics
       const numSectors = SECTORS.length;
       const arc = (2 * Math.PI) / numSectors;
       const prevPeg = Math.floor(prevAngle / arc);
@@ -2125,7 +2029,7 @@
       try { canvas.releasePointerCapture(e.pointerId); } catch(err) {}
 
       const now = performance.now();
-      let releaseVelocity = 0; // rad/s
+      let releaseVelocity = 0;
       if (dragHistory.length >= 2) {
         const oldest = dragHistory[0];
         const dt = (now - oldest.time) / 1000;
@@ -2134,7 +2038,6 @@
         }
       }
 
-      // Momentum projection & velocity handoff (§5, §6)
       const isEligibleTurn = (state.turnState === 'NEED_SPIN');
       const hasMomentum = Math.abs(releaseVelocity) > 1.2 || (isEligibleTurn && dragAccumulatedDelta > 1.4);
 
@@ -2147,7 +2050,7 @@
           omega = (omega >= 0 ? 1 : -1) * (14 + Math.random() * 8);
         }
 
-        const deceleration = 0.982; // Apple fluid exponential decay rate
+        const deceleration = 0.982;
         const numSectors = SECTORS.length;
         const arc = (2 * Math.PI) / numSectors;
         let lastPeg = Math.floor(state.wheelAngle / arc);
@@ -2191,7 +2094,7 @@
       const diff = targetAngle - startAngle;
 
       const startTime = performance.now();
-      const duration = 260; // Critically damped Apple spring settle (§4)
+      const duration = 260;
 
       function springFrame(t) {
         const elapsed = t - startTime;
@@ -2244,9 +2147,7 @@
           triggerHaptic(5);
 
           wheelPointer.style.transform = `translateX(-50%) rotate(${(Math.random() * 12 - 6)}deg)`;
-          setTimeout(() => {
-            wheelPointer.style.transform = `translateX(-50%) rotate(0deg)`;
-          }, 35);
+          setTimeout(() => { wheelPointer.style.transform = `translateX(-50%) rotate(0deg)`; }, 35);
         }
 
         drawMainWheel();
@@ -2351,9 +2252,7 @@
         state.guessedLettersHistory[char] = 'wrong';
         sfx.wrong();
         mainSectorBanner.textContent = `Буквы «${char}» нет! Ход переходит.`;
-        setTimeout(() => {
-          cycleTurn();
-        }, 1200);
+        setTimeout(() => { cycleTurn(); }, 1200);
       }
 
       renderProjector();
@@ -2431,9 +2330,7 @@
       broadcastState();
     }
 
-    masterPassTurnBtn.addEventListener('click', () => {
-      cycleTurn();
-    });
+    masterPassTurnBtn.addEventListener('click', () => cycleTurn());
 
     endGameBackToLobbyBtn.addEventListener('click', () => {
       if (confirm("Завершить текущую игру и перейти в лобби?")) {
@@ -2472,7 +2369,7 @@
       }
     }
 
-    /* 11. ПУЛЬТ ЛИДЕРА ВЗВОДА (MOBILE CAPTAIN LOGIC) */
+    /* ПУЛЬТ ЛИДЕРА ВЗВОДА (ТЕЛЕФОН) */
     const mobileLoginCard = document.getElementById('mobileLoginCard');
     const mobileGameControls = document.getElementById('mobileGameControls');
     const mobileRoomCodeInput = document.getElementById('mobileRoomCodeInput');
@@ -2510,19 +2407,19 @@
     mobileTeamSelect.addEventListener('change', () => {
       if (mobileTeamSelect.value) {
         const t = state.teams.find(item => item.id === Number(mobileTeamSelect.value));
-        if (t) {
-          mobileCustomTeamInput.value = t.name;
-        }
+        if (t) mobileCustomTeamInput.value = t.name;
       }
     });
 
     mobileConnectBtn.addEventListener('click', () => {
       sfx.init();
       const code = mobileRoomCodeInput.value.trim().toUpperCase();
-      if (code !== state.roomCode) {
-        alert("Неверный код сессии! Проверьте код на экране ведущего.");
+      if (!code) {
+        alert("Введите код сессии!");
         return;
       }
+      state.roomCode = code;
+      setupFirebaseListeners(state.roomCode);
 
       const customName = mobileCustomTeamInput.value.trim();
       let selectedTeamId = mobileTeamSelect.value ? Number(mobileTeamSelect.value) : null;
@@ -2557,11 +2454,12 @@
       }
 
       state.captainTeamId = selectedTeamId;
+      sessionStorage.setItem('ovp_captain_team_id', state.captainTeamId);
 
       mobileLoginCard.style.display = 'none';
       mobileGameControls.style.display = 'flex';
 
-      syncChannel.postMessage({
+      sendAction({
         type: 'ACTION_REGISTER_CUSTOM_TEAM',
         roomCode: state.roomCode,
         teamId: state.captainTeamId,
@@ -2572,11 +2470,11 @@
       renderMobileSelect();
       renderMobileView();
       renderProjector();
-      broadcastState();
     });
 
     mobileDisconnectBtn.addEventListener('click', () => {
       state.captainTeamId = null;
+      sessionStorage.removeItem('ovp_captain_team_id');
       mobileGameControls.style.display = 'none';
       mobileLoginCard.style.display = 'block';
     });
@@ -2644,12 +2542,11 @@
 
         btn.addEventListener('click', () => {
           sfx.init();
-          syncChannel.postMessage({
+          sendAction({
             type: 'ACTION_GUESS_LETTER',
             roomCode: state.roomCode,
             letter: char
           });
-          processLetterChoice(char);
         });
         mobileKeypadGrid.appendChild(btn);
       });
@@ -2657,26 +2554,24 @@
 
     mobileSpinBtn.addEventListener('click', () => {
       sfx.init();
-      syncChannel.postMessage({
+      sendAction({
         type: 'ACTION_SPIN',
         roomCode: state.roomCode
       });
-      spinMainWheel();
     });
 
     mobileFullWordBtn.addEventListener('click', () => {
       const w = mobileFullWordInput.value.trim();
       if (!w) return;
-      syncChannel.postMessage({
+      sendAction({
         type: 'ACTION_GUESS_FULL_WORD',
         roomCode: state.roomCode,
         word: w
       });
-      processFullWordChoice(w);
       mobileFullWordInput.value = '';
     });
 
-    /* 12. МОДАЛЬНЫЕ ОКНА И ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ */
+    /* МОДАЛЬНЫЕ ОКНА И УТИЛИТЫ */
     const appModal = document.getElementById('appModal');
     const modalEmoji = document.getElementById('modalEmoji');
     const modalTitle = document.getElementById('modalTitle');
@@ -2742,7 +2637,7 @@
         .replace(/'/g, '&#039;');
     }
 
-        // Секретное открытие ответов по 5 нажатиям на QR-код
+    // Секретное открытие ответов по 5 нажатиям на QR-код
     let qrClicks = 0;
     let qrTimer = null;
     const qrContainer = document.getElementById('qrCanvasContainer');
@@ -2752,15 +2647,11 @@
       qrContainer.addEventListener('click', () => {
         qrClicks++;
         triggerHaptic(6);
-
-        // Тактильный пружинный отклик QR-кода на нажатие
         qrContainer.style.transform = 'scale(0.94)';
         setTimeout(() => { qrContainer.style.transform = 'scale(1)'; }, 100);
 
         clearTimeout(qrTimer);
-        qrTimer = setTimeout(() => {
-          qrClicks = 0;
-        }, 3000);
+        qrTimer = setTimeout(() => { qrClicks = 0; }, 3000);
 
         if (qrClicks >= 5) {
           qrClicks = 0;
@@ -2778,7 +2669,7 @@
       });
     }
 
-    // Инициализация при старте страницы со случайным порядком
+    // Инициализация при старте страницы
     const enabledOnStart = state.questions.filter(q => q.enabled);
     state.activeRoundList = shuffleArray(enabledOnStart.length > 0 ? enabledOnStart : state.questions);
     initStageRound();
@@ -2787,6 +2678,18 @@
     renderMobileSelect();
     renderProjector();
     drawMainWheel();
+
+    // Восстановление сессии капитана при обновлении вкладки
+    const savedCaptain = sessionStorage.getItem('ovp_captain_team_id');
+    if (savedCaptain) {
+      state.captainTeamId = Number(savedCaptain);
+      mobileLoginCard.style.display = 'none';
+      mobileGameControls.style.display = 'flex';
+    }
+
+    // Подключение к Firebase-комнате
+    setupFirebaseListeners(state.roomCode);
+    broadcastState();
   </script>
 </body>
 </html>

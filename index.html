@@ -11,10 +11,9 @@
 
   <style>
     /* ==========================================================================
-       APPLE DESIGN SYSTEM & MILITARY THEME VARIABLES
+       APPLE DESIGN SYSTEM & MILITARY THEME (ZERO HORIZONTAL SCROLL)
        ========================================================================== */
     :root {
-      /* Палитра военной академии */
       --primary-navy: #0B2D50;
       --deep-navy: #071C33;
       --navy-elevated: #103864;
@@ -34,13 +33,11 @@
       --success-light: #E6F7EF;
       --danger-light: #FDEEEC;
 
-      /* Apple Spring & Motion Curves */
       --spring-smooth: cubic-bezier(0.16, 1, 0.3, 1);
       --spring-bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
       --transition-fast: 140ms var(--spring-smooth);
       --transition-normal: 280ms var(--spring-smooth);
 
-      /* Скругления и тени */
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 18px;
@@ -50,14 +47,21 @@
       --shadow-glow: 0 0 24px var(--accent-gold-glow);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
+    /* СТРОГИЙ ЗАПРЕТ БОКОВОГО СКРОЛА ДЛЯ ВСЕХ УСТРОЙСТВ */
+    html {
+      overflow-x: hidden;
+      max-width: 100%;
+      width: 100%;
+      -webkit-text-size-adjust: 100%;
     }
 
     body {
+      overflow-x: hidden;
+      max-width: 100%;
+      width: 100%;
+      position: relative;
+      margin: 0;
+      padding: 0;
       background-color: var(--surface-light);
       background-image: radial-gradient(circle at 50% 0%, #E9EEF5 0%, var(--surface-light) 75%);
       color: var(--text-main);
@@ -65,17 +69,26 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      min-width: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    img, svg, canvas {
+      max-width: 100%;
     }
 
     /* ХЕДЕР */
     header {
-      background: rgba(7, 28, 51, 0.92);
+      background: rgba(7, 28, 51, 0.94);
       backdrop-filter: blur(24px) saturate(180%);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
       color: #FFFFFF;
-      padding: 0.8rem 1.6rem;
+      padding: 0.7rem 1.4rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -84,59 +97,87 @@
       top: 0;
       z-index: 120;
       box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+      width: 100%;
+      max-width: 100%;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       cursor: pointer;
       user-select: none;
+      flex-shrink: 1;
+      min-width: 0;
     }
 
     .brand-insignia {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold));
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 800;
       color: #1A1305;
       box-shadow: 0 4px 10px rgba(198, 159, 90, 0.4);
       border-top: 1px solid rgba(255, 255, 255, 0.6);
       transition: transform var(--transition-fast);
+      flex-shrink: 0;
     }
     .brand:active .brand-insignia { transform: scale(0.94); }
 
+    .brand-title {
+      min-width: 0;
+    }
     .brand-title h1 {
       font-size: 1.15rem;
       font-weight: 700;
       letter-spacing: -0.01em;
       line-height: 1.2;
+      margin: 0;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .brand-title p {
       font-size: 0.78rem;
       color: var(--accent-gold-light);
       font-weight: 500;
       letter-spacing: 0.02em;
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+
+    .badge-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #1A1305;
+      background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold));
+      padding: 2px 7px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(198, 159, 90, 0.35);
+      border-top: 1px solid rgba(255,255,255,0.6);
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      flex-shrink: 0;
     }
 
     .pill-btn {
       background: rgba(255, 255, 255, 0.12);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #FFFFFF;
-      padding: 7px 14px;
+      padding: 7px 13px;
       border-radius: var(--radius-full);
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -144,20 +185,34 @@
       gap: 6px;
       transition: all var(--transition-fast);
       backdrop-filter: blur(10px);
+      white-space: nowrap;
+      user-select: none;
+      touch-action: manipulation;
     }
     .pill-btn:hover { background: rgba(255, 255, 255, 0.22); }
-    .pill-btn:active { transform: scale(0.96); }
+    .pill-btn:active { transform: scale(0.95); }
+
+    .device-badge {
+      cursor: pointer;
+      background: rgba(198, 159, 90, 0.2);
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold-light);
+      font-weight: 700;
+    }
+    .device-badge:hover {
+      background: rgba(198, 159, 90, 0.32);
+      transform: translateY(-1px);
+    }
 
     /* ПЕРЕКЛЮЧАТЕЛЬ РОЛЕЙ */
     .role-bar-container {
       max-width: 1360px;
-      margin: 1.2rem auto 0.4rem;
+      margin: 1rem auto 0.4rem;
       width: 100%;
-      padding: 0 1.5rem;
+      padding: 0 1.2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
       gap: 12px;
     }
 
@@ -183,6 +238,9 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
+      user-select: none;
+      touch-action: manipulation;
     }
     .segmented-item.active {
       background: #FFFFFF;
@@ -190,6 +248,13 @@
       box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     }
     .segmented-item:active { transform: scale(0.97); }
+
+    .room-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
 
     .room-badge {
       display: inline-flex;
@@ -203,6 +268,7 @@
       font-weight: 700;
       color: var(--primary-navy);
       box-shadow: var(--shadow-subtle);
+      white-space: nowrap;
     }
     .room-badge .code-highlight {
       color: var(--accent-red);
@@ -210,12 +276,28 @@
       letter-spacing: 1px;
     }
 
+    .device-auto-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--primary-navy);
+      box-shadow: var(--shadow-subtle);
+      white-space: nowrap;
+    }
+
+    /* ОСНОВНОЙ КОНТЕНТ */
     main {
       flex: 1;
       max-width: 1360px;
       width: 100%;
       margin: 0 auto;
-      padding: 1.2rem 1.5rem 2.5rem;
+      padding: 1rem 1.2rem 2.5rem;
       display: flex;
       flex-direction: column;
     }
@@ -223,6 +305,7 @@
     .view-screen {
       display: none;
       animation: springFadeIn 0.35s var(--spring-smooth);
+      width: 100%;
     }
     .view-screen.active { display: block; }
 
@@ -242,6 +325,7 @@
       margin-bottom: 1.5rem;
       position: relative;
       overflow: hidden;
+      width: 100%;
     }
     .glass-card::before {
       content: "";
@@ -266,8 +350,9 @@
       transition: all var(--transition-fast);
       outline: none;
       text-decoration: none;
+      touch-action: manipulation;
     }
-    .btn:active { transform: scale(0.96); }
+    .btn:active:not(:disabled) { transform: scale(0.96); }
     .btn-primary {
       background: var(--primary-navy);
       color: #FFFFFF;
@@ -327,9 +412,9 @@
     .lobby-grid {
       display: grid;
       grid-template-columns: 1fr 1.3fr;
-      gap: 1.8rem;
+      gap: 1.5rem;
+      width: 100%;
     }
-    @media (max-width: 960px) { .lobby-grid { grid-template-columns: 1fr; } }
 
     .qr-join-card {
       background: linear-gradient(145deg, #092442, #071C33);
@@ -343,21 +428,25 @@
       box-shadow: var(--shadow-elevated);
       border: 2px solid var(--accent-gold);
       margin-bottom: 1.5rem;
+      width: 100%;
     }
 
     .qr-box {
-      width: 160px;
-      height: 160px;
+      width: 150px;
+      height: 150px;
       background: #FFFFFF;
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 10px;
-      margin: 1rem 0;
+      margin: 1rem auto;
       box-shadow: 0 6px 18px rgba(0,0,0,0.3);
-      transition: transform 0.1s;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.15s var(--spring-smooth);
     }
+    .qr-box:active { transform: scale(0.94); }
 
     .code-display {
       font-size: 2.2rem;
@@ -373,12 +462,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
+      padding: 12px 14px;
       background: #FFFFFF;
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
       margin-bottom: 8px;
       transition: all var(--transition-fast);
+      width: 100%;
     }
     .team-badge-row:hover {
       border-color: var(--accent-gold);
@@ -392,6 +482,7 @@
       height: 8px;
       border-radius: 50%;
       background: #9AA7B7;
+      flex-shrink: 0;
     }
     .status-dot.active {
       background: var(--success);
@@ -402,13 +493,14 @@
       background: #EEF3F8;
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-full);
-      padding: 5px 12px;
-      font-size: 0.8rem;
+      padding: 6px 12px;
+      font-size: 0.82rem;
       font-weight: 600;
       color: var(--primary-navy);
       cursor: pointer;
       transition: all var(--transition-fast);
       user-select: none;
+      touch-action: manipulation;
     }
     .pill-btn-suggestion:hover {
       background: var(--primary-navy);
@@ -427,6 +519,7 @@
       margin-bottom: 8px;
       align-items: flex-start;
       transition: all var(--transition-fast);
+      width: 100%;
     }
     .question-row.disabled {
       opacity: 0.55;
@@ -439,8 +532,8 @@
       grid-template-columns: 280px 1fr;
       gap: 1.5rem;
       align-items: start;
+      width: 100%;
     }
-    @media (max-width: 1024px) { .projector-grid { grid-template-columns: 1fr; } }
 
     .stage-board {
       background: linear-gradient(145deg, #09203A, #061628);
@@ -452,12 +545,14 @@
       margin-bottom: 1.5rem;
       box-shadow: var(--shadow-elevated), inset 0 2px 20px rgba(0,0,0,0.6);
       position: relative;
+      width: 100%;
     }
 
     .stage-question {
       font-size: 1.35rem;
-      font-weight: 500;
-      line-height: 1.45;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -0.015em;
       margin: 1rem auto 1.8rem;
       max-width: 860px;
       text-shadow: 0 2px 4px rgba(0,0,0,0.5);
@@ -466,18 +561,19 @@
     .tiles-deck {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
       justify-content: center;
       perspective: 1200px;
+      width: 100%;
     }
 
     .tile-slot {
-      width: 54px;
-      height: 68px;
+      width: clamp(32px, 7.5vw, 54px);
+      height: clamp(44px, 10vw, 68px);
       position: relative;
       perspective: 1000px;
+      flex-shrink: 0;
     }
-    @media (max-width: 650px) { .tile-slot { width: 38px; height: 48px; } }
 
     .tile-flipper {
       width: 100%;
@@ -506,47 +602,50 @@
       background: linear-gradient(135deg, #113661, #0A2240);
       border: 2px solid #28548A;
       color: rgba(255, 255, 255, 0.25);
-      font-size: 1.4rem;
+      font-size: clamp(1.1rem, 3.5vw, 1.4rem);
     }
     .tile-back {
       background: linear-gradient(135deg, #FFFFFF, #FFFDF8);
       color: var(--primary-navy);
-      font-size: 2rem;
+      font-size: clamp(1.2rem, 4vw, 2rem);
       border: 2px solid var(--accent-gold);
       transform: rotateY(180deg);
       box-shadow: inset 0 0 10px rgba(198, 159, 90, 0.25);
     }
-    @media (max-width: 650px) { .tile-back { font-size: 1.4rem; } }
 
     .game-console {
       display: grid;
       grid-template-columns: 360px 1fr;
       gap: 1.8rem;
       align-items: center;
+      width: 100%;
     }
-    @media (max-width: 900px) { .game-console { grid-template-columns: 1fr; } }
 
     .wheel-stage {
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
+      width: 100%;
     }
 
     .wheel-wrapper {
       position: relative;
-      width: 320px;
-      height: 320px;
+      width: min(320px, 80vw);
+      height: min(320px, 80vw);
+      max-width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     #mainWheelCanvas {
-      width: 320px;
-      height: 320px;
+      width: 100% !important;
+      max-width: min(320px, 80vw) !important;
+      height: auto !important;
+      aspect-ratio: 1;
       border-radius: 50%;
-      box-shadow: 0 10px 30px rgba(7, 28, 51, 0.28), 0 0 0 6px var(--primary-navy), 0 0 0 9px var(--accent-gold);
+      box-shadow: 0 10px 30px rgba(7, 28, 51, 0.28), 0 0 0 5px var(--primary-navy), 0 0 0 8px var(--accent-gold);
       touch-action: none;
       cursor: grab;
     }
@@ -558,9 +657,9 @@
       left: 50%;
       transform: translateX(-50%);
       width: 0; height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-top: 26px solid var(--accent-red);
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 24px solid var(--accent-red);
       z-index: 30;
       filter: drop-shadow(0 3px 6px rgba(0,0,0,0.4));
       transform-origin: 50% 0%;
@@ -575,6 +674,7 @@
       margin-bottom: 10px;
       transition: all var(--transition-normal);
       position: relative;
+      width: 100%;
     }
     .platoon-card.active-turn {
       border-color: var(--accent-gold);
@@ -601,9 +701,7 @@
       display: grid;
       grid-template-columns: repeat(11, 1fr);
       gap: 6px;
-    }
-    @media (max-width: 600px) {
-      .virtual-keyboard { grid-template-columns: repeat(8, 1fr); gap: 5px; }
+      width: 100%;
     }
 
     .key-cap {
@@ -621,6 +719,7 @@
       transition: all var(--transition-fast);
       user-select: none;
       box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      touch-action: manipulation;
     }
     .key-cap:hover:not(:disabled) {
       background: var(--primary-navy);
@@ -628,6 +727,7 @@
       border-color: var(--primary-navy);
       transform: translateY(-2px);
     }
+    .key-cap:active:not(:disabled) { transform: scale(0.93); }
     .key-cap:disabled {
       background: #EAEEF4;
       color: #9AA7B6;
@@ -661,10 +761,11 @@
       background: #FFFFFF;
       border: 2px solid var(--border-subtle);
       border-radius: var(--radius-lg);
-      padding: 1.4rem;
+      padding: 1.4rem 1.1rem;
       text-align: center;
       box-shadow: var(--shadow-subtle);
       transition: all var(--transition-normal);
+      width: 100%;
     }
     .mobile-turn-banner.my-turn {
       border-color: var(--accent-gold);
@@ -702,8 +803,9 @@
       background: #FFFFFF;
       border-radius: var(--radius-lg);
       border: 1px solid var(--border-subtle);
-      padding: 1.4rem;
+      padding: 1.4rem 1.1rem;
       box-shadow: var(--shadow-subtle);
+      width: 100%;
     }
 
     .mobile-keypad {
@@ -711,6 +813,7 @@
       grid-template-columns: repeat(7, 1fr);
       gap: 6px;
       margin-top: 10px;
+      width: 100%;
     }
     .mobile-keypad .key-cap {
       height: 48px;
@@ -747,7 +850,7 @@
       box-shadow: var(--shadow-elevated);
       max-width: 500px;
       width: 100%;
-      padding: 2rem;
+      padding: 2rem 1.5rem;
       text-align: center;
     }
 
@@ -759,58 +862,19 @@
       z-index: 2000;
     }
 
-    .btn, .pill-btn, .segmented-item, .key-cap, .pill-btn-suggestion {
-      touch-action: manipulation;
-    }
-
     /* ==========================================================================
-       АДАПТАЦИЯ ПОД ВСЕ УСТРОЙСТВА (MOBILE / TABLET / PC / PROJECTOR)
+       АДАПТИВНЫЕ МЕДИА-ЗАПРОСЫ ДЛЯ СМАРТФОНОВ И ПЛАНШЕТОВ
        ========================================================================== */
-    
-    .device-badge {
-      cursor: pointer;
-      background: rgba(255, 255, 255, 0.16);
-      border: 1px solid rgba(198, 159, 90, 0.5);
-      color: var(--accent-gold-light);
-      font-weight: 700;
-      transition: all var(--transition-fast);
-      user-select: none;
-    }
-    .device-badge:hover {
-      background: rgba(198, 159, 90, 0.25);
-      border-color: var(--accent-gold-light);
-      transform: translateY(-1px);
-    }
-    .device-badge:active {
-      transform: scale(0.95);
-    }
-
-    .device-auto-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #FFFFFF;
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-full);
-      padding: 6px 12px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--primary-navy);
-      box-shadow: var(--shadow-subtle);
-      user-select: none;
-    }
-
-    /* Адаптивность для планшетов и мобильных (до 960px) */
     @media (max-width: 960px) {
-      .lobby-grid { grid-template-columns: 1fr; }
-      .game-console { grid-template-columns: 1fr; }
+      .lobby-grid { grid-template-columns: 100%; gap: 1rem; }
+      .projector-grid { grid-template-columns: 100%; gap: 1rem; }
+      .game-console { grid-template-columns: 100%; gap: 1.2rem; }
     }
 
-    /* Адаптивность для смартфонов (до 768px) */
     @media (max-width: 768px) {
       header {
-        padding: 0.6rem 0.9rem;
-        padding-top: max(0.6rem, env(safe-area-inset-top));
+        padding: 0.5rem 0.75rem;
+        padding-top: max(0.5rem, env(safe-area-inset-top));
       }
       .brand {
         gap: 8px;
@@ -818,27 +882,37 @@
       .brand-insignia {
         width: 32px;
         height: 32px;
-        font-size: 1.05rem;
+        font-size: 1rem;
       }
       .brand-title h1 {
-        font-size: 0.95rem;
-        line-height: 1.15;
+        font-size: 0.96rem;
       }
       .brand-title p {
-        display: none !important; /* скрываем длинный слоган на смартфонах */
+        display: none !important;
       }
       .header-actions {
-        gap: 6px;
+        gap: 5px;
       }
       .pill-btn {
-        padding: 5px 9px;
+        padding: 5px 8px;
         font-size: 0.76rem;
+      }
+      .btn-label-desktop {
+        display: none !important;
+      }
+      .device-badge {
+        padding: 5px 9px;
+      }
+      .device-badge .btn-label-desktop {
+        display: inline !important;
       }
 
       .role-bar-container {
-        padding: 0 0.8rem;
-        margin: 0.7rem auto 0.4rem;
-        gap: 8px;
+        padding: 0 0.75rem;
+        margin: 0.5rem auto 0.3rem;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
       }
       .segmented-control {
         width: 100%;
@@ -846,55 +920,55 @@
         padding: 3px;
       }
       .segmented-item {
-        flex: 1;
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 8px 4px;
+        font-size: 0.76rem;
+        font-weight: 700;
         justify-content: center;
-        padding: 7px 4px;
-        font-size: 0.74rem;
-        text-align: center;
-      }
-      .segmented-item span:first-child {
-        font-size: 0.9rem;
+        gap: 4px;
+        white-space: nowrap;
       }
       .tab-label-text {
-        font-size: 0.72rem;
+        font-size: 0.76rem;
       }
-
-      .device-auto-pill {
-        display: none; /* скрываем на мобильных, чтобы не загромождать */
+      .room-bar-right {
+        width: 100%;
+        justify-content: center;
       }
       .room-badge {
         width: 100%;
-        justify-content: space-between;
-        padding: 5px 12px;
-        font-size: 0.8rem;
+        justify-content: center;
+        padding: 4px 10px;
+        font-size: 0.78rem;
+      }
+      .device-auto-pill {
+        display: none !important;
       }
 
       main {
-        padding: 0.6rem 0.8rem 2rem;
+        padding: 0.5rem 0.75rem 2rem;
         padding-bottom: max(2rem, env(safe-area-inset-bottom));
       }
-
       .glass-card {
         padding: 1.1rem 0.85rem;
         border-radius: var(--radius-md);
         margin-bottom: 1rem;
       }
 
-      /* Барабан на мобильном экране */
-      .wheel-wrapper {
-        width: min(290px, 84vw);
-        height: min(290px, 84vw);
+      .qr-join-card {
+        padding: 1.2rem 0.85rem;
+        margin-bottom: 1rem;
       }
-      #mainWheelCanvas {
-        width: 100% !important;
-        max-width: min(290px, 84vw);
-        height: auto !important;
-        aspect-ratio: 1;
+      .qr-box {
+        width: 135px;
+        height: 135px;
+        margin: 0.6rem auto;
       }
 
-      /* Буквы на табло на мобильном экране */
       .stage-board {
-        padding: 1.3rem 0.75rem;
+        padding: 1.2rem 0.75rem;
+        margin-bottom: 1rem;
       }
       .stage-question {
         font-size: 1.05rem;
@@ -905,92 +979,77 @@
         gap: 5px;
       }
       .tile-slot {
-        width: clamp(30px, 7.5vw, 44px);
-        height: clamp(40px, 9.5vw, 56px);
-      }
-      .tile-front {
-        font-size: 1.1rem;
+        width: clamp(28px, 7vw, 42px);
+        height: clamp(38px, 9.5vw, 56px);
       }
       .tile-back {
-        font-size: clamp(1.2rem, 3.8vw, 1.6rem);
+        font-size: clamp(1.1rem, 3.8vw, 1.6rem);
       }
 
-      /* Виртуальная клавиатура на мобильном экране */
+      .wheel-wrapper {
+        width: min(280px, 80vw);
+        height: min(280px, 80vw);
+      }
+      #mainWheelCanvas {
+        width: 100% !important;
+        max-width: min(280px, 80vw) !important;
+        height: auto !important;
+        aspect-ratio: 1;
+      }
+
       .virtual-keyboard {
         grid-template-columns: repeat(7, 1fr);
         gap: 4px;
       }
       .key-cap {
-        height: 42px;
-        font-size: 1rem;
+        height: 40px;
+        font-size: 0.95rem;
       }
 
-      /* Пульт командира на телефоне */
-      .mobile-shell {
-        max-width: 100%;
-      }
-      .mobile-turn-banner {
-        padding: 1.1rem 0.85rem;
-      }
-      .mobile-action-card {
-        padding: 1.1rem 0.85rem;
-      }
       .mobile-keypad {
         grid-template-columns: repeat(7, 1fr);
-        gap: 5px;
+        gap: 4px;
       }
       .mobile-keypad .key-cap {
         height: 48px;
         font-size: 1.15rem;
       }
       #mobileSpinBtn {
-        padding: 15px;
+        padding: 16px;
         font-size: 1.15rem;
       }
 
-      /* Предотвращение iOS Safari зума при клике в input */
       input, select, textarea {
         font-size: 16px !important;
       }
     }
 
-    /* Адаптивность для ультракомпактных смартфонов (до 360px, iPhone SE) */
     @media (max-width: 360px) {
-      .header-actions {
-        gap: 4px;
-      }
-      .pill-btn {
-        padding: 4px 7px;
-        font-size: 0.7rem;
-      }
-      .segmented-item {
-        font-size: 0.68rem;
-        padding: 6px 2px;
-      }
-      .tile-slot {
-        width: 27px;
-        height: 36px;
-      }
-      .tile-back {
-        font-size: 1.05rem;
-      }
-      .mobile-keypad .key-cap {
-        height: 42px;
-        font-size: 1rem;
-      }
+      .header-actions { gap: 3px; }
+      .pill-btn { padding: 4px 6px; font-size: 0.7rem; }
+      .segmented-item { font-size: 0.7rem; padding: 6px 2px; }
+      .tile-slot { width: 26px; height: 35px; }
+      .mobile-keypad .key-cap { height: 42px; font-size: 1rem; }
     }
 
-    /* Стиль маркера активного режима для телефона */
-    body.device-phone #tabCaptain {
-      position: relative;
+    /* Доступность и темы */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .tile-flipper { transition: none !important; }
+      .modal-backdrop.active { animation: none !important; }
+      .mobile-turn-banner.my-turn { animation: none !important; }
     }
-    body.device-phone #tabCaptain::after {
-      content: "•";
-      color: var(--success);
-      font-size: 1.2rem;
-      position: absolute;
-      top: -3px;
-      right: 4px;
+
+    @media (prefers-reduced-transparency: reduce) {
+      header { background: #071C33 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+      .glass-card { background: #FFFFFF !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+      .segmented-control { background: #E2E8F0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+      .modal-backdrop { background: rgba(7, 28, 51, 0.92) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
     }
   </style>
 
@@ -1002,19 +1061,19 @@
     <div class="brand" id="brandResetBtn" title="В начало">
       <div class="brand-insignia">🎖️</div>
       <div class="brand-title">
-        <h1>Поле Чудес: Основы военной подготовки</h1>
-        <p>Интерактивная командная викторина • Военная кафедра / ОВП</p>
+        <h1>Поле Чудес <span class="badge-tag">ОВП</span></h1>
+        <p>Интерактивная командная викторина</p>
       </div>
     </div>
     <div class="header-actions">
-      <div id="deviceModeBadge" class="pill-btn device-badge" title="Нажмите для быстрой смены режима: Телефон / ПК">
-        <span id="deviceModeIcon">📱</span> <span id="deviceModeLabel">Определение...</span>
-      </div>
-      <button class="pill-btn" id="soundToggleBtn">
-        <span id="soundIcon">🔊</span> <span id="soundLabel">Звук</span>
+      <button class="pill-btn device-badge" id="deviceModeBadge" title="Сменить режим (Телефон / ПК)">
+        <span id="deviceModeIcon">📱</span> <span id="deviceModeLabel" class="btn-label-desktop">Пульт</span>
       </button>
-      <button class="pill-btn" id="rulesModalBtn">
-        <span>ℹ️</span> Инструкция
+      <button class="pill-btn" id="soundToggleBtn" title="Звук">
+        <span id="soundIcon">🔊</span> <span id="soundLabel" class="btn-label-desktop">Звук</span>
+      </button>
+      <button class="pill-btn" id="rulesModalBtn" title="Инструкция">
+        <span>ℹ️</span> <span class="btn-label-desktop">Инструкция</span>
       </button>
     </div>
   </header>
@@ -1022,24 +1081,24 @@
   <!-- ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМОВ -->
   <div class="role-bar-container">
     <div class="segmented-control">
-      <button class="segmented-item active" id="tabHostLobby">
-        <span>🎖️</span> <span class="tab-label-text">Штаб (Лобби)</span>
+      <button class="segmented-item" id="tabHostLobby">
+        <span>🎖️</span> <span class="tab-label-text">Штаб</span>
       </button>
       <button class="segmented-item" id="tabProjector">
-        <span>🖥️</span> <span class="tab-label-text">Экран (Проектор)</span>
+        <span>🖥️</span> <span class="tab-label-text">Экран</span>
       </button>
-      <button class="segmented-item" id="tabCaptain">
-        <span>📱</span> <span class="tab-label-text">Пульт взвода</span>
+      <button class="segmented-item active" id="tabCaptain">
+        <span>📱</span> <span class="tab-label-text">Пульт</span>
       </button>
     </div>
 
-    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+    <div class="room-bar-right">
       <span id="deviceAutoDetectNotice" class="device-auto-pill">
         <span class="status-dot active"></span>
-        <span id="deviceDetectText">Авто-режим: Определение...</span>
+        <span id="deviceDetectText">Авто: Телефон</span>
       </span>
       <div class="room-badge">
-        <span>Код:</span>
+        <span>Код сессии:</span>
         <span class="code-highlight" id="roomCodeDisplay">ОВП-42</span>
       </div>
     </div>
@@ -1115,9 +1174,9 @@
               Команды подключаются со смартфонов или добавляются ведущим вручную (минимум 2 команды).
             </p>
 
-            <div style="display: flex; gap: 8px; margin-bottom: 1rem;">
-              <input type="text" id="addTeamInput" class="input-box" placeholder="Название нового взвода..." maxlength="25">
-              <button class="btn btn-primary" id="addTeamBtn">Добавить</button>
+            <div style="display: flex; gap: 8px; margin-bottom: 1rem; width: 100%;">
+              <input type="text" id="addTeamInput" class="input-box" style="flex: 1 1 auto; min-width: 0;" placeholder="Название нового взвода..." maxlength="25">
+              <button class="btn btn-primary" id="addTeamBtn" style="flex-shrink: 0; white-space: nowrap; padding: 11px 16px;">Добавить</button>
             </div>
 
             <div id="hostTeamsListUI"></div>
@@ -1242,9 +1301,9 @@
                     <span>Риск-игра: Назвать слово целиком</span>
                     <span style="color: var(--accent-gold-dark);">+1000 очков</span>
                   </div>
-                  <div style="display: flex; gap: 8px;">
-                    <input type="text" id="projectorFullWordInput" class="input-box" placeholder="Слово целиком..." disabled>
-                    <button class="btn btn-primary" id="projectorFullWordBtn" disabled>Ответить</button>
+                  <div style="display: flex; gap: 8px; width: 100%;">
+                    <input type="text" id="projectorFullWordInput" class="input-box" style="flex: 1 1 auto; min-width: 0;" placeholder="Слово целиком..." disabled>
+                    <button class="btn btn-primary" id="projectorFullWordBtn" style="flex-shrink: 0; white-space: nowrap; padding: 11px 16px;" disabled>Ответить</button>
                   </div>
                 </div>
               </div>
@@ -1325,9 +1384,9 @@
               <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px;">
                 НАЗВАТЬ ВСЁ СЛОВО (+1000 ОЧКОВ):
               </div>
-              <div style="display: flex; gap: 6px;">
-                <input type="text" id="mobileFullWordInput" class="input-box" placeholder="Слово целиком..." disabled>
-                <button class="btn btn-primary" id="mobileFullWordBtn" disabled>Ответ</button>
+              <div style="display: flex; gap: 6px; width: 100%;">
+                <input type="text" id="mobileFullWordInput" class="input-box" style="flex: 1 1 auto; min-width: 0;" placeholder="Слово целиком..." disabled>
+                <button class="btn btn-primary" id="mobileFullWordBtn" style="flex-shrink: 0; white-space: nowrap; padding: 10px 14px;" disabled>Ответ</button>
               </div>
             </div>
           </div>
@@ -2941,7 +3000,6 @@
         const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || window.matchMedia('(pointer: coarse)').matches;
         
         const w = window.innerWidth;
-        const h = window.innerHeight;
         const isNarrow = w <= 768;
 
         const isPhone = hasCaptainParam || (isMobileUA && !isTabletUA) || (isTouch && isNarrow) || (w <= 600);
@@ -2956,9 +3014,9 @@
         } else if (hasHostParam) {
           autoRole = 'host';
         } else if (isPhone) {
-          autoRole = 'captain'; // Смартфон -> открываем «Пульт взвода»!
+          autoRole = 'captain'; // Смартфон -> всегда открываем «Пульт взвода»!
         } else {
-          autoRole = 'host'; // Компьютер -> открываем «Штаб ведущего»!
+          autoRole = 'host'; // ПК -> «Штаб ведущего»
         }
 
         return {
@@ -2967,14 +3025,15 @@
           isDesktop,
           isTouch,
           autoRole,
-          roomParam
+          roomParam,
+          hasExplicitParam: hasCaptainParam || hasProjectorParam || hasHostParam
         };
       },
 
       init() {
         const info = this.detect();
 
-        // Если передан код комнаты в ссылке, применяем его
+        // Применяем код комнаты из ссылки если задан
         if (info.roomParam) {
           state.roomCode = info.roomParam.trim().toUpperCase();
           const rDisplay = document.getElementById('roomCodeDisplay');
@@ -2985,38 +3044,43 @@
           if (mInput) mInput.value = state.roomCode;
         }
 
-        // Применяем классы устройства на body
+        // Классы устройства на body
         document.body.classList.remove('device-phone', 'device-tablet', 'device-desktop', 'has-touch');
         if (info.isPhone) document.body.classList.add('device-phone');
         else if (info.isTablet) document.body.classList.add('device-tablet');
         else document.body.classList.add('device-desktop');
         if (info.isTouch) document.body.classList.add('has-touch');
 
-        // Проверяем приоритет выбора роли
-        const urlParams = new URLSearchParams(window.location.search);
-        const hasExplicitParam = urlParams.has('role') || urlParams.has('captain') || urlParams.has('projector') || urlParams.has('host');
-        const savedRole = sessionStorage.getItem('ovp_user_role');
-
+        // ВЫБОР НАЧАЛЬНОЙ ВКЛАДКИ:
+        // Если телефон и нет явного параметра (?role=host), ВСЕГДА открываем 'captain' (Пульт)!
         let targetRole = info.autoRole;
-        if (!hasExplicitParam && savedRole) {
-          targetRole = savedRole;
+        if (info.isPhone && !info.hasExplicitParam) {
+          targetRole = 'captain';
+          sessionStorage.setItem('ovp_user_role', 'captain');
+        } else if (!info.hasExplicitParam) {
+          const savedRole = sessionStorage.getItem('ovp_user_role');
+          if (savedRole) targetRole = savedRole;
         }
 
         switchTab(targetRole, false);
         this.updateBadgeUI(info, targetRole);
 
-        // Клик по бейджу в шапке переключает режимы Телефон / ПК
+        // Клик по бейджу в шапке быстро переключает режим
         const badgeBtn = document.getElementById('deviceModeBadge');
         if (badgeBtn) {
           badgeBtn.addEventListener('click', () => {
             triggerHaptic(8);
             sfx.init();
-            const nextRole = (state.activeTab === 'captain') ? 'host' : 'captain';
-            switchTab(nextRole, true);
+            // Цикл: Пульт -> Экран -> Штаб -> Пульт
+            let next = 'captain';
+            if (state.activeTab === 'captain') next = 'projector';
+            else if (state.activeTab === 'projector') next = 'host';
+            else next = 'captain';
+            switchTab(next, true);
           });
         }
 
-        // Кнопка копирования мобильной ссылки
+        // Кнопка копирования ссылки для смартфонов
         const copyBtn = document.getElementById('copyMobileJoinLinkBtn');
         if (copyBtn) {
           copyBtn.addEventListener('click', async () => {
@@ -3057,7 +3121,6 @@
           });
         }
 
-        // Слушатель изменения ориентации и размера экрана
         window.addEventListener('resize', () => {
           this.handleResize();
         });
@@ -3071,21 +3134,21 @@
         const badgeLabel = document.getElementById('deviceModeLabel');
         const detectText = document.getElementById('deviceDetectText');
 
-        const deviceName = info.isPhone ? 'Смартфон' : info.isTablet ? 'Планшет' : 'ПК';
-        
         let roleName = 'Штаб';
         let roleIcon = '🎖️';
         if (role === 'captain') {
-          roleName = 'Пульт взвода';
+          roleName = 'Пульт';
           roleIcon = '📱';
         } else if (role === 'projector') {
-          roleName = 'Экран игры';
+          roleName = 'Экран';
           roleIcon = '🖥️';
         }
 
         if (badgeIcon) badgeIcon.textContent = roleIcon;
-        if (badgeLabel) badgeLabel.textContent = `${deviceName}: ${roleName}`;
-        if (detectText) detectText.textContent = `Авто: ${deviceName} → ${roleName}`;
+        if (badgeLabel) badgeLabel.textContent = roleName;
+        if (detectText) {
+          detectText.textContent = info.isPhone ? 'Смартфон' : 'ПК';
+        }
       },
 
       handleResize() {

@@ -2,6 +2,9 @@
 <html lang="ru">
 <head style="display:none!important;">
   <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Поле Чудес: Основы военной подготовки</title>
 
@@ -1301,7 +1304,7 @@
     </div>
 
     <!-- ЭКРАН 2: ЭКРАН ИГРЫ / ПРОЕКТОР -->
-    <div class="view-screen" id="screenProjector">
+    <div class="view-screen" id="screenProjector" style="display: none;">
       <div class="projector-grid">
         
         <!-- Боковая панель счета взводов -->
@@ -1394,7 +1397,7 @@
     </div>
 
     <!-- ЭКРАН 3: ПУЛЬТ ЛИДЕРА ВЗВОДА (ТЕЛЕФОН) -->
-    <div class="view-screen" id="screenCaptain">
+    <div class="view-screen" id="screenCaptain" style="display: none;">
       <div class="mobile-shell">
         
         <div class="glass-card" id="mobileLoginCard">
@@ -1484,7 +1487,7 @@
 
   
   <!-- МОДАЛЬНОЕ ОКНО БОЛЬШОГО QR-КОДА ДЛЯ ПРОЕКТОРА И АУДИТОРИИ -->
-  <div class="modal-backdrop" id="qrFullscreenModal">
+  <div class="modal-backdrop" id="qrFullscreenModal" style="display: none;">
     <div class="qr-modal-sheet">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
         <div style="text-align: left;">
@@ -1527,7 +1530,7 @@
   </div>
 
   <!-- МОДАЛЬНОЕ ОКНО СООБЩЕНИЙ -->
-  <div class="modal-backdrop" id="appModal">
+  <div class="modal-backdrop" id="appModal" style="display: none;">
     <div class="modal-sheet">
       <div style="font-size: 2.8rem; margin-bottom: 0.8rem;" id="modalEmoji">🎉</div>
       <h2 style="color: var(--primary-navy); margin-bottom: 0.8rem; font-size: 1.35rem;" id="modalTitle">Слово отгадано!</h2>
@@ -2612,21 +2615,27 @@ var QRCodeEngine = (function() {
         try { sessionStorage.setItem('ovp_user_role', target); } catch(e) {}
       }
       [tabHostLobby, tabProjector, tabCaptain].forEach(b => b.classList.remove('active'));
-      [screenHostLobby, screenProjector, screenCaptain].forEach(s => s.classList.remove('active'));
+      [screenHostLobby, screenProjector, screenCaptain].forEach(s => {
+        s.classList.remove('active');
+        s.style.display = 'none';
+      });
 
       if (target === 'host') {
         tabHostLobby.classList.add('active');
         screenHostLobby.classList.add('active');
+        screenHostLobby.style.display = 'block';
         renderHostTeams();
         renderHostQuestions();
       } else if (target === 'projector') {
         tabProjector.classList.add('active');
         screenProjector.classList.add('active');
+        screenProjector.style.display = 'block';
         renderProjector();
         drawMainWheel();
       } else if (target === 'captain') {
         tabCaptain.classList.add('active');
         screenCaptain.classList.add('active');
+        screenCaptain.style.display = 'block';
         renderMobileSelect();
         renderMobileView();
       }
@@ -2835,6 +2844,7 @@ var QRCodeEngine = (function() {
       const modal = document.getElementById('qrFullscreenModal');
       if (modal) {
         modal.classList.add('active');
+        modal.style.display = 'flex';
         triggerHaptic(10);
         sfx.init();
       }
@@ -2842,7 +2852,10 @@ var QRCodeEngine = (function() {
 
     function closeQrFullscreenModal() {
       const modal = document.getElementById('qrFullscreenModal');
-      if (modal) modal.classList.remove('active');
+      if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+      }
     }
 
     function renderHostTeams() {
@@ -3945,10 +3958,12 @@ var QRCodeEngine = (function() {
       modalEmoji.textContent = emoji || "★";
       state.modalCallback = cb;
       appModal.classList.add('active');
+      appModal.style.display = 'flex';
     }
 
     modalOkBtn.addEventListener('click', () => {
       appModal.classList.remove('active');
+      appModal.style.display = 'none';
       if (state.modalCallback) {
         const cb = state.modalCallback;
         state.modalCallback = null;

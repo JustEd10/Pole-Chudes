@@ -842,6 +842,159 @@
 
     
     /* QR ПОДКЛЮЧЕНИЕ И ПОЛНОЭКРАННЫЙ QR */
+    
+    /* ==========================================================================
+       APPLE-STYLE PLATOON PICKER & SUGGESTION CHIPS (MOBILE UX)
+       ========================================================================== */
+    .platoon-picker-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      transition: all var(--transition-fast);
+      box-shadow: 0 2px 6px rgba(7, 28, 51, 0.04);
+      position: relative;
+    }
+    .platoon-picker-card:hover {
+      border-color: rgba(198, 159, 90, 0.5);
+      background: #FDFAF5;
+      transform: translateY(-1px);
+    }
+    .platoon-picker-card:active {
+      transform: scale(0.97);
+      transition: transform 90ms ease-out;
+    }
+    .platoon-picker-card.selected {
+      border-color: var(--accent-gold);
+      background: linear-gradient(135deg, #FFFDF8, #FFF7E8);
+      box-shadow: 0 4px 16px rgba(198, 159, 90, 0.32), 0 0 0 1px var(--accent-gold);
+    }
+    .platoon-picker-card.occupied {
+      opacity: 0.85;
+      background: #F8FAFD;
+    }
+
+    .platoon-picker-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+    .platoon-picker-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(11, 45, 80, 0.07), rgba(11, 45, 80, 0.12));
+      color: var(--primary-navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      flex-shrink: 0;
+      border: 1px solid rgba(11, 45, 80, 0.08);
+      transition: all var(--transition-fast);
+    }
+    .platoon-picker-card.selected .platoon-picker-avatar {
+      background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold));
+      color: #1A1305;
+      box-shadow: 0 2px 8px rgba(198, 159, 90, 0.4);
+      border-color: transparent;
+      transform: scale(1.05);
+    }
+
+    .platoon-picker-info {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .platoon-picker-name {
+      font-weight: 700;
+      font-size: 0.96rem;
+      color: var(--primary-navy);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .platoon-picker-sub {
+      font-size: 0.73rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .platoon-picker-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--border-subtle);
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: transparent;
+      transition: all var(--transition-fast);
+    }
+    .platoon-picker-card.selected .platoon-picker-check {
+      background: var(--primary-navy);
+      border-color: var(--primary-navy);
+      color: #FFFFFF;
+      transform: scale(1.05);
+      box-shadow: 0 2px 6px rgba(11, 45, 80, 0.25);
+    }
+
+    .team-chips-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .team-chip-pill {
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: 7px 13px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--primary-navy);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+      touch-action: manipulation;
+      transition: all var(--transition-fast);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .team-chip-pill:hover {
+      background: #F4F7FB;
+      border-color: rgba(11, 45, 80, 0.3);
+      transform: translateY(-1px);
+    }
+    .team-chip-pill:active {
+      transform: scale(0.95);
+      transition: transform 80ms ease-out;
+    }
+    .team-chip-pill.active {
+      background: var(--primary-navy);
+      color: #FFFFFF;
+      border-color: var(--primary-navy);
+      box-shadow: 0 2px 8px rgba(11, 45, 80, 0.25);
+    }
+
     .qr-modal-sheet {
       background: linear-gradient(145deg, #092442, #071C33);
       border-radius: var(--radius-lg);
@@ -1415,28 +1568,61 @@
             Введите код сессии и придумайте название для своей команды (или выберите из списка).
           </p>
 
-          <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.4rem;">
+          <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 1.4rem;">
+            <!-- Код сессии -->
             <div>
-              <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 4px;">КОД СЕССИИ:</label>
-              <input type="text" id="mobileRoomCodeInput" class="input-box" value="ОВП-42" style="font-weight: 800; letter-spacing: 2px;">
-            </div>
-
-            <div>
-              <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 4px;">НАЗВАНИЕ ВАШЕЙ КОМАНДЫ:</label>
-              <input type="text" id="mobileCustomTeamInput" class="input-box" placeholder="Например: Десант, Витязи, Гвардия..." maxlength="25" style="font-weight: 700; font-size: 1rem;">
-            </div>
-
-            <div>
-              <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600;">Идеи названий:</div>
-              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;">
-                <button type="button" class="pill-btn-suggestion" onclick="setTeamNameSuggestion('Десант')">Десант</button>
-                <button type="button" class="pill-btn-suggestion" onclick="setTeamNameSuggestion('Разведка')">Разведка</button>
-                <button type="button" class="pill-btn-suggestion" onclick="setTeamNameSuggestion('Связисты')">Связисты</button>
-                <button type="button" class="pill-btn-suggestion" onclick="setTeamNameSuggestion('Морпехи')">Морпехи</button>
-                <button type="button" class="pill-btn-suggestion" onclick="setTeamNameSuggestion('Гвардия')">Гвардия</button>
-                <button type="button" class="pill-btn-suggestion" onclick="setTeamNameSuggestion('Витязи')">Витязи</button>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px;">КОД СЕССИИ ВИКТОРИНЫ</label>
+                <span style="font-size: 0.72rem; color: var(--accent-gold-dark); font-weight: 700;">Совпадает с проектором</span>
               </div>
-              <select id="mobileTeamSelect" class="input-box" style="font-size: 0.85rem; font-weight: 600; padding: 8px 12px;"></select>
+              <input type="text" id="mobileRoomCodeInput" class="input-box" value="ОВП-42" style="font-weight: 800; font-size: 1.15rem; letter-spacing: 2px; text-align: center; color: var(--primary-navy); background: #FFFDF9; border-color: rgba(198, 159, 90, 0.45);">
+            </div>
+
+            <!-- БЛОК 1: Выбор уже созданного взвода (Apple cards) -->
+            <div id="existingTeamsPickerSection">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px;">ВЗВОДЫ В ЭТОЙ СЕССИИ</label>
+                <span id="existingTeamsCountBadge" style="font-size: 0.72rem; font-weight: 700; background: #EEF3F8; color: var(--primary-navy); padding: 2px 8px; border-radius: 10px;">0 в игре</span>
+              </div>
+              
+              <!-- Интерактивный список взводов -->
+              <div id="mobileTeamsCardsList" style="display: flex; flex-direction: column; gap: 8px;">
+                <!-- Карточки генерируются функцией renderMobileSelect() -->
+              </div>
+              
+              <!-- Скрытый селект для совместимости -->
+              <select id="mobileTeamSelect" style="display: none;"></select>
+            </div>
+
+            <!-- Разделитель -->
+            <div style="display: flex; align-items: center; gap: 10px; margin: 4px 0 2px;">
+              <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+              <span style="font-size: 0.72rem; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.8px;">или укажите другое название</span>
+              <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+            </div>
+
+            <!-- БЛОК 2: Ввод своего названия и подсказки-чипы -->
+            <div>
+              <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 6px; letter-spacing: 0.5px;">НАЗВАНИЕ ВАШЕЙ КОМАНДЫ</label>
+              <div style="position: relative; width: 100%;">
+                <input type="text" id="mobileCustomTeamInput" class="input-box" placeholder="Например: Десант, Витязи, Гвардия..." maxlength="25" style="font-weight: 700; font-size: 1rem; padding-right: 36px;">
+                <button type="button" id="clearCustomTeamInputBtn" style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: #D9E1EC; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem; color: #58687A; cursor: pointer; align-items: center; justify-content: center; padding: 0;">✕</button>
+              </div>
+
+              <!-- Быстрый выбор из воинских формирований (Apple chips) -->
+              <div style="margin-top: 10px;">
+                <div style="font-size: 0.73rem; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600;">Быстрый выбор из воинских формирований:</div>
+                <div class="team-chips-container" id="teamChipsContainer">
+                  <button type="button" class="team-chip-pill" data-name="Десант" onclick="setTeamNameSuggestion('Десант')"><span>🪂</span> <span>Десант</span></button>
+                  <button type="button" class="team-chip-pill" data-name="Разведка" onclick="setTeamNameSuggestion('Разведка')"><span>🦅</span> <span>Разведка</span></button>
+                  <button type="button" class="team-chip-pill" data-name="Связисты" onclick="setTeamNameSuggestion('Связисты')"><span>📻</span> <span>Связисты</span></button>
+                  <button type="button" class="team-chip-pill" data-name="Морпехи" onclick="setTeamNameSuggestion('Морпехи')"><span>⚓</span> <span>Морпехи</span></button>
+                  <button type="button" class="team-chip-pill" data-name="Гвардия" onclick="setTeamNameSuggestion('Гвардия')"><span>🛡️</span> <span>Гвардия</span></button>
+                  <button type="button" class="team-chip-pill" data-name="Витязи" onclick="setTeamNameSuggestion('Витязи')"><span>⚔️</span> <span>Витязи</span></button>
+                  <button type="button" class="team-chip-pill" data-name="Спецназ" onclick="setTeamNameSuggestion('Спецназ')"><span>⚡</span> <span>Спецназ</span></button>
+                  <button type="button" class="team-chip-pill" data-name="Снайперы" onclick="setTeamNameSuggestion('Снайперы')"><span>🎯</span> <span>Снайперы</span></button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -3745,29 +3931,186 @@ var QRCodeEngine = (function() {
     const mobileFullWordInput = document.getElementById('mobileFullWordInput');
     const mobileFullWordBtn = document.getElementById('mobileFullWordBtn');
 
+    function getPlatoonIcon(name) {
+      const n = (name || '').toLowerCase();
+      if (n.includes('десант') || n.includes('вдв')) return '🪂';
+      if (n.includes('развед')) return '🦅';
+      if (n.includes('связ')) return '📻';
+      if (n.includes('морпех') || n.includes('флот')) return '⚓';
+      if (n.includes('гвард')) return '🛡️';
+      if (n.includes('витяз') || n.includes('богатыр')) return '⚔️';
+      if (n.includes('спецназ') || n.includes('альфа') || n.includes('вымпел')) return '⚡';
+      if (n.includes('снайп') || n.includes('снайп')) return '🎯';
+      if (n.includes('артиллер') || n.includes('сапер')) return '💣';
+      if (n.includes('танкист') || n.includes('броня')) return '🛡️';
+      return '🎖️';
+    }
+
     window.setTeamNameSuggestion = function(name) {
       if (mobileCustomTeamInput) {
         mobileCustomTeamInput.value = name;
+        if (mobileTeamSelect) mobileTeamSelect.value = '';
+        triggerHaptic(8);
+        sfx.init();
+        sfx.tick();
+        updatePlatoonPickerUI();
+        updateConnectBtnLabel();
         mobileCustomTeamInput.focus();
       }
     };
 
     function renderMobileSelect() {
-      mobileTeamSelect.innerHTML = '<option value="">-- Или выберите уже созданный взвод --</option>';
-      state.teams.forEach(t => {
-        const opt = document.createElement('option');
-        opt.value = t.id;
-        opt.textContent = t.name + (t.isConnected ? " (Уже подключен)" : "");
-        mobileTeamSelect.appendChild(opt);
+      // Синхронизация скрытого селекта для обратной совместимости
+      if (mobileTeamSelect) {
+        mobileTeamSelect.innerHTML = '<option value="">-- Выбор взвода --</option>';
+        if (state.teams) {
+          state.teams.forEach(t => {
+            const opt = document.createElement('option');
+            opt.value = t.id;
+            opt.textContent = t.name + (t.isConnected ? " (Уже подключен)" : "");
+            mobileTeamSelect.appendChild(opt);
+          });
+        }
+      }
+
+      const container = document.getElementById('mobileTeamsCardsList');
+      const badge = document.getElementById('existingTeamsCountBadge');
+      if (!container) return;
+
+      container.innerHTML = '';
+      const totalTeams = state.teams ? state.teams.length : 0;
+      if (badge) {
+        badge.textContent = totalTeams > 0 ? `${totalTeams} в игре` : '0 в игре';
+      }
+
+      if (!state.teams || state.teams.length === 0) {
+        container.innerHTML = `
+          <div style="background: rgba(11, 45, 80, 0.03); border: 1.5px dashed var(--border-subtle); border-radius: var(--radius-md); padding: 14px 12px; text-align: center; color: var(--text-secondary); font-size: 0.84rem;">
+            <div style="font-size: 1.3rem; margin-bottom: 4px;">📡</div>
+            <div style="color: var(--primary-navy); font-weight: 700; margin-bottom: 2px;">Взводы ещё не созданы ведущим</div>
+            <div style="font-size: 0.78rem; opacity: 0.85;">Введите название команды ниже или выберите подсказку воинского формирования.</div>
+          </div>
+        `;
+        updatePlatoonPickerUI();
+        updateConnectBtnLabel();
+        return;
+      }
+
+      const selectedValue = mobileTeamSelect ? mobileTeamSelect.value : '';
+      const cInput = document.getElementById('mobileCustomTeamInput');
+      const customValue = (cInput ? cInput.value : '').trim().toLowerCase();
+
+      state.teams.forEach((t, i) => {
+        const isSelected = (selectedValue && String(selectedValue) === String(t.id)) || (customValue && t.name.toLowerCase() === customValue);
+        const card = document.createElement('div');
+        card.className = `platoon-picker-card ${isSelected ? 'selected' : ''} ${t.isConnected ? 'occupied' : ''}`;
+        card.dataset.teamId = t.id;
+        card.dataset.teamName = t.name;
+
+        const icon = getPlatoonIcon(t.name);
+        const statusText = t.isConnected ? '🟢 Уже подключен командир' : '⚪ Свободен (готов к бою)';
+
+        card.innerHTML = `
+          <div class="platoon-picker-left">
+            <div class="platoon-picker-avatar">${icon}</div>
+            <div class="platoon-picker-info">
+              <div class="platoon-picker-name">${i + 1}. ${escapeHtml(t.name)}</div>
+              <div class="platoon-picker-sub">${statusText}</div>
+            </div>
+          </div>
+          <div class="platoon-picker-check">✓</div>
+        `;
+
+        card.addEventListener('click', () => {
+          triggerHaptic(10);
+          sfx.init();
+          sfx.tick();
+
+          if (mobileTeamSelect) mobileTeamSelect.value = t.id;
+          if (mobileCustomTeamInput) mobileCustomTeamInput.value = t.name;
+
+          updatePlatoonPickerUI();
+          updateConnectBtnLabel();
+        });
+
+        container.appendChild(card);
+      });
+
+      updatePlatoonPickerUI();
+      updateConnectBtnLabel();
+    }
+
+    function updatePlatoonPickerUI() {
+      const selectedId = mobileTeamSelect ? mobileTeamSelect.value : '';
+      const cInput = document.getElementById('mobileCustomTeamInput');
+      const customVal = (cInput ? cInput.value : '').trim().toLowerCase();
+
+      const cards = document.querySelectorAll('.platoon-picker-card');
+      cards.forEach(card => {
+        const tId = card.dataset.teamId;
+        const tName = (card.dataset.teamName || '').toLowerCase();
+        const isSel = (selectedId && String(selectedId) === String(tId)) || (customVal && tName === customVal);
+        card.classList.toggle('selected', Boolean(isSel));
+      });
+
+      const chips = document.querySelectorAll('.team-chip-pill');
+      chips.forEach(chip => {
+        const chipName = (chip.dataset.name || '').toLowerCase();
+        chip.classList.toggle('active', Boolean(customVal && chipName === customVal));
+      });
+
+      const clearBtn = document.getElementById('clearCustomTeamInputBtn');
+      if (clearBtn && mobileCustomTeamInput) {
+        clearBtn.style.display = mobileCustomTeamInput.value ? 'flex' : 'none';
+      }
+    }
+
+    function updateConnectBtnLabel() {
+      const connectBtn = document.getElementById('mobileConnectBtn');
+      if (!connectBtn) return;
+
+      const selectedId = mobileTeamSelect ? mobileTeamSelect.value : '';
+      const cInput = document.getElementById('mobileCustomTeamInput');
+      const customVal = (cInput ? cInput.value : '').trim();
+
+      if (selectedId) {
+        const t = state.teams ? state.teams.find(item => String(item.id) === String(selectedId)) : null;
+        if (t) {
+          connectBtn.innerHTML = `🚀 Войти как командир «${escapeHtml(t.name)}»`;
+          return;
+        }
+      }
+
+      if (customVal) {
+        connectBtn.innerHTML = `🚀 Создать взвод «${escapeHtml(customVal)}» и войти`;
+      } else {
+        connectBtn.innerHTML = `🚀 Зарегистрировать команду и войти в игру`;
+      }
+    }
+
+    if (mobileCustomTeamInput) {
+      mobileCustomTeamInput.addEventListener('input', () => {
+        // Если пользователь вводит вручную, сбрасываем точный ID селекта, если имя не совпадает
+        if (mobileTeamSelect && state.teams) {
+          const match = state.teams.find(t => t.name.toLowerCase() === mobileCustomTeamInput.value.trim().toLowerCase());
+          mobileTeamSelect.value = match ? match.id : '';
+        }
+        updatePlatoonPickerUI();
+        updateConnectBtnLabel();
       });
     }
 
-    mobileTeamSelect.addEventListener('change', () => {
-      if (mobileTeamSelect.value) {
-        const t = state.teams.find(item => item.id === Number(mobileTeamSelect.value));
-        if (t) mobileCustomTeamInput.value = t.name;
-      }
-    });
+    const clearCustomTeamInputBtn = document.getElementById('clearCustomTeamInputBtn');
+    if (clearCustomTeamInputBtn && mobileCustomTeamInput) {
+      clearCustomTeamInputBtn.addEventListener('click', () => {
+        mobileCustomTeamInput.value = '';
+        if (mobileTeamSelect) mobileTeamSelect.value = '';
+        triggerHaptic(6);
+        updatePlatoonPickerUI();
+        updateConnectBtnLabel();
+        mobileCustomTeamInput.focus();
+      });
+    }
 
     mobileConnectBtn.addEventListener('click', () => {
       sfx.init();
